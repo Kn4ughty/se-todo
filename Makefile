@@ -6,5 +6,5 @@ run:
 	flask --app $(MAIN_FILE_PATH) run
 
 run-debug:
-	echo "NO"
+	flask --app $(MAIN_FILE_PATH) --debug run
 
