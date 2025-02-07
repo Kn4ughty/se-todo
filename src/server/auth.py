@@ -1,8 +1,16 @@
+import bcrypt
 from flask import request
 
 # This is a circular import. However, flask offically reccomends it
 # https://flask.palletsprojects.com/en/stable/patterns/packages/
 from main import app
+import server.database as database
+
+# Bcrypt guide
+# https://www.geeksforgeeks.org/hashing-passwords-in-python-with-bcrypt/
+
+
+print(database.get_users())
 
 
 @app.get("/login")
@@ -15,5 +23,7 @@ def login_get():
 
 @app.post("/login")
 def login_post():
-    s = f"u: {request.form['username']} \n p: {request.form['password']}"
-    return s
+    username = request.form["username"]
+    password = request.form["password"]
+
+    return username + " " + password
