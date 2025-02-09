@@ -1,5 +1,5 @@
 import sqlite3
-import logging as log
+from loguru import logger as log
 from typing import List
 from pathlib import Path
 import os
@@ -10,39 +10,59 @@ from server.types import User
 # https://www.geeksforgeeks.org/python-sqlite/
 
 
-local_share = Path("~/.local/share/").expanduser()
-data_dir_name = "naught"
-
-db_file_location = Path("~/.local/share/naught/todo/db.sqlite3")
-
-
 def setup_data_directory():
-    if not os.path.exists(local_share):
-        # ERROR
-        log.error(
-            f"{local_share} folder does not exist? This is strange. \
-            Not attempting to recover from this error, fix it manually"
+    data_dir_name = "naught"
+    app_dir = "todo"
+    local_share = Path("~/.local/share/").expanduser()
+    log.debug(f"local share dir expanded to {local_share}")
+
+    self_data_dir = os.path.join(local_share, data_dir_name)
+    full_data_dir = os.path.join(self_data_dir, app_dir)
+    log.debug(f"Full app data dir = {full_data_dir}")
+
+    if os.path.exists(full_data_dir):
+        log.info(f"Full data dir directory already found. {full_data_dir}")
+        return
+
+    log.info(f"Full Data dir was not found. = {full_data_dir}")
+
+    if os.path.exists(self_data_dir):
+        log.info(
+            f"Naught data dir was found! Creating app specfic dir. = {self_data_dir}"
         )
-        raise FileExistsError
+        os.mkdir(full_data_dir)
+        return
 
-    if not os.path.exists(os.path.join(local_share, data_dir_name)):
-        log.info(f"Creating {data_dir_name} folder in {local_share}")
-        os.mkdir(os.path.join(local_share, data_dir_name))
+    if os.path.exists(local_share):
+        log.info("Naught dir was not found, Creating folder now.")
+        os.mkdir(self_data_dir)
+        return
+
+    log.error(
+        f"{local_share} directory was not found. This is strange.\
+    Make the directory manually to continue"
+    )
 
 
-sql_connection = sqlite3.connect(db_file_location)
-cur = sql_connection.cursor()
+setup_data_directory()
+
+# this should be based on all the fancy path planning used in the above func
+db_file_location = Path("~/.local/share/naught/todo/db.sqlite3").expanduser()
+conn = sqlite3.connect(db_file_location)
+cur = conn.cursor()
 
 
 def init_database():
+    # SELECT name FROM sqlite_master WHERE type='table';
     list_of_tables = cur.execute(
-        """SELECT tableName FROM sqlite_master WHERE type='table'"""
-    ).fetchall()
+        """SELECT name FROM sqlite_master WHERE type='table'"""
+    )
+    list_of_tables = [row[0] for row in cur.fetchall()]
 
     if "USERS" not in list_of_tables:
         cur.execute(""" CREATE TABLE USERS (
                 username VARCHAR(255) NOT NULL,
-                password CHAR(60) NOT NULL,
+                password CHAR(60) NOT NULL
             ); """)
 
 
