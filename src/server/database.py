@@ -28,7 +28,8 @@ def setup_data_directory():
 
     if os.path.exists(self_data_dir):
         log.info(
-            f"Naught data dir was found! Creating app specfic dir. = {self_data_dir}"
+            f"Naught data dir was found! Creating app specfic dir. = {
+                self_data_dir}"
         )
         os.mkdir(full_data_dir)
         return
@@ -69,5 +70,26 @@ def init_database():
 init_database()
 
 
-def get_users() -> List[User]:
-    return []
+def get_all_users(conn: sqlite3.Connection, cur: sqlite3.Cursor) -> List[User]:
+    cur.execute("""
+    SELECT * FROM USERS
+    """)
+
+    raw_list_of_users = [row for row in cur.fetchall()]
+    log.debug(f"List of all users found in DB: {raw_list_of_users}")
+
+    return raw_list_of_users
+
+
+get_all_users(conn, cur)
+
+
+def add_user(conn: sqlite3.Connection, cur: sqlite3.Cursor, u: User) -> None | str:
+    cur.execute(f"""
+    INSERT INTO USERS VALUES ('{u.username}', '{u.password}')
+    """)
+    conn.commit()
+    return
+
+
+add_user(conn, cur, "hah")
