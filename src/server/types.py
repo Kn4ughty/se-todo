@@ -5,4 +5,3 @@ from dataclasses import dataclass
 class User:
     username: str
     password: bytes
-    salt: bytes
