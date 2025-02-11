@@ -1,5 +1,5 @@
 import bcrypt
-from flask import request
+from flask import request, send_file
 from loguru import logger as log
 
 # This is a circular import. However, flask offically reccomends it
@@ -14,10 +14,7 @@ from server.types import User
 
 @app.get("/login")
 def login_get():
-    with open("src/web/login/login.html") as file:
-        d = file.read()
-
-    return d
+    return send_file("web/login/login.html")
 
 
 @app.post("/login")
