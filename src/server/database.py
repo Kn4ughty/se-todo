@@ -63,8 +63,10 @@ def get_db() -> sqlite3.Connection:
 
 
 @app.teardown_appcontext
-def close_connection(exception):
-    log.error(f"Teardown_appcontext error {exception}")
+def teardown_db(exception):
+    if exception is not None:
+        log.debug(f"Teardown_appcontext exception: {exception}")
+
     db = getattr(g, "_database", None)
     if db is not None:
         db.close()
