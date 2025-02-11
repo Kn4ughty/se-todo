@@ -12,11 +12,6 @@ from server.types import User
 # https://www.geeksforgeeks.org/hashing-passwords-in-python-with-bcrypt/
 
 
-@app.get("/login")
-def login_get():
-    return send_file("web/login/login.html")
-
-
 @app.post("/login")
 def login_post():
     username = request.form["username"]

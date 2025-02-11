@@ -1,21 +1,25 @@
 from loguru import logger
-from flask import Flask, send_file
+import flask
+from flask import Flask
+import os
 
-app = Flask(__name__)
+STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
+
+app = Flask(
+    __name__,
+    static_folder=STATIC_DIR,
+    static_url_path=None,
+)
 
 from server import auth, database  # noqa: E402
 
 
+# When requesting something from /, go to the static dir and serve that
+@app.route("/<path:filename>")
+def serve_all_static_files(filename):
+    return flask.send_from_directory(STATIC_DIR, filename)
+
+
 @app.route("/")
-def index():
-    return send_file("web/index.html")
-
-
-@app.get("/index.css")
-def index_css():
-    return send_file("web/index.css", mimetype="text/css")
-
-
-@app.get("/snow.JPEG")
-def snow():
-    return send_file("web/snow.JPEG", mimetype="image/jpeg")
+def serve_index():
+    return flask.send_from_directory(STATIC_DIR, "index.html")
