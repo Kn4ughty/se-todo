@@ -3,8 +3,10 @@ from loguru import logger as log
 from typing import List
 from pathlib import Path
 import os
+from flask import g
 
 from server.types import User
+from main import app
 
 # This guide is good
 # https://www.geeksforgeeks.org/python-sqlite/
@@ -49,28 +51,48 @@ setup_data_directory()
 
 # this should be based on all the fancy path planning used in the above func
 db_file_location = Path("~/.local/share/naught/todo/db.sqlite3").expanduser()
-conn = sqlite3.connect(db_file_location)
-cur = conn.cursor()
+# conn = sqlite3.connect(db_file_location)
+# cur = conn.cursor()
+
+
+def get_db() -> sqlite3.Connection:
+    db = getattr(g, "_database", None)
+    if db is None:
+        db = g._database = sqlite3.connect(db_file_location)
+    return db
+
+
+@app.teardown_appcontext
+def close_connection(exception):
+    log.error(f"Teardown_appcontext error {exception}")
+    db = getattr(g, "_database", None)
+    if db is not None:
+        db.close()
 
 
 def init_database():
-    # SELECT name FROM sqlite_master WHERE type='table';
-    list_of_tables = cur.execute(
-        """SELECT name FROM sqlite_master WHERE type='table'"""
-    )
-    list_of_tables = [row[0] for row in cur.fetchall()]
+    with app.app_context():
+        con = get_db()
+        cur = con.cursor()
 
-    if "USERS" not in list_of_tables:
-        cur.execute(""" CREATE TABLE USERS (
-                username VARCHAR(255) NOT NULL,
-                password CHAR(60) NOT NULL
-            ); """)
+        list_of_tables = cur.execute(
+            """SELECT name FROM sqlite_master WHERE type='table'"""
+        )
+        list_of_tables = [row[0] for row in cur.fetchall()]
+
+        if "USERS" not in list_of_tables:
+            cur.execute(""" CREATE TABLE USERS (
+                    username VARCHAR(255) NOT NULL,
+                    password CHAR(60) NOT NULL
+                ); """)
+            con.commit()
 
 
 init_database()
 
 
-def get_all_users(conn: sqlite3.Connection, cur: sqlite3.Cursor) -> List[User]:
+def get_all_users() -> List[User]:
+    cur = get_db().cursor()
     cur.execute("""
     SELECT * FROM USERS
     """)
@@ -81,15 +103,20 @@ def get_all_users(conn: sqlite3.Connection, cur: sqlite3.Cursor) -> List[User]:
     return raw_list_of_users
 
 
-get_all_users(conn, cur)
+# get_all_users()
 
 
-def add_user(conn: sqlite3.Connection, cur: sqlite3.Cursor, u: User) -> None | str:
-    cur.execute(f"""
-    INSERT INTO USERS VALUES ('{u.username}', '{u.password}')
-    """)
-    conn.commit()
+def add_user(u: User) -> None:
+    con = get_db()
+    cur = con.cursor()
+    cur.execute(
+        """
+    INSERT INTO USERS VALUES ('?', '?')
+    """,
+        (u.username, u.password),
+    )
+    con.commit()
     return
 
 
-add_user(conn, cur, "hah")
+# add_user(conn, cur, au)
