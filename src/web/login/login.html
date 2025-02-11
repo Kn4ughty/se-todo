@@ -5,17 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>HTML 5 Boilerplate</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+@import url("/index.css");
+
+body, html {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+label {
+    text-align: left;
+}
+
+#bg-image {
+    /*TODO, download that file*/
+    background-image: url('https://knaughty.neocities.org/magicpattern-starry-night-1734175830233.png');
+    filter: blur(5px);
+    transform: scale(120%); /* Hide edges */
+    background-position: center;
+    background-repear: no-repeat;
+    background-size: cover;
+    height: 100%;
+}
+
+#login-box {
+    border: 1px solid var(--text);
+    width: 200px;
+    border-radius: 20px;
+    padding: 10px;
+    background-color: #1e1e2ec0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(125%);
+    text-align: center;
+    /* todo add drop shadow */
+    filter: drop-shadow(10px 10px 10px #1e1e2e);
+}
+        </style>
   </head>
+
   <body>
-    <script src="index.js"></script>
-    <h1> Please login </h1>
-    <form action="/login" method="post">
-      <label for="fname">Username</label><br>
-      <input type="text" id="fname" name="username" value=""><br>
-      <label for="pwd">Password</label><br>
-      <input type="password" id="pwd" name="password" value=""><br><br>
-      <input type="submit" value="Submit">
-    </form>
+    <div id="bg-image"></div>
+    <div id='login-box'>
+        <h1> Login </h1>
+        <form action="/login" method="post">
+          <!--<label for="fname">Username</label><br>-->
+          <input type="text" id="fname" name="username" placeholder="Username...">
+        <br>
+        <br>
+          <!--<label for="pwd">Password</label><br>-->
+          <input type="password" id="pwd" name="password" placeholder="Password..."><br><br>
+                <button type="submit" value="">Submit </button>
+        </form>
+    </div>
   </body>
 </html
