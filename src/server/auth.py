@@ -28,6 +28,11 @@ def login_post():
     return username + " " + password
 
 
+@app.get("/users")
+def get_users():
+    return database.get_all_users()
+
+
 def create_user_from_raw(username: str, password: str) -> User | str:
     if len(username) >= 255:
         log.info(f"Username input was longer than 255 characters: {username}")
