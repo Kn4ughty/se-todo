@@ -1,6 +1,7 @@
 import bcrypt
 from flask import request, send_file, Response
 from loguru import logger as log
+import json
 
 # This is a circular import. However, flask offically reccomends it
 # https://flask.palletsprojects.com/en/stable/patterns/packages/
@@ -20,9 +21,17 @@ def login_post():
     return username + " " + password
 
 
+# TODO VERY IMPORTANT
+# REMEMBER TO DELETE THIS. (dont want to leak user credentials)
 @app.get("/users")
 def get_users():
-    return database.get_all_users()
+    user_list = database.get_all_users()
+
+    user_dict = {}
+    for user in user_list:
+        user_dict[user.username] = str(user.password)
+
+    return json.dumps(user_dict)
 
 
 @app.post("/users")

@@ -100,11 +100,17 @@ def get_all_users() -> List[User]:
     cur.execute("""
     SELECT * FROM USERS
     """)
+    raw_list = cur.fetchall()
+    log.info(f"data recived from db for user list, {raw_list}")
+    # Recieves an List of tupels.
 
-    raw_list_of_users = [row for row in cur.fetchall()]
-    log.debug(f"List of all users found in DB: {raw_list_of_users}")
+    user_list = []
+    for user in raw_list:
+        user_list.append(User(user[0], user[1]))
 
-    return raw_list_of_users
+    log.debug(f"Processed list of all users found in DB: {user_list}")
+
+    return user_list
 
 
 # get_all_users()
