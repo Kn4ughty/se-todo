@@ -62,6 +62,8 @@ def get_db() -> sqlite3.Connection:
     return db
 
 
+# This automatically closes the db connection at the end of the request
+# Its kinda weird https://flask.palletsprojects.com/en/stable/patterns/sqlite3/
 @app.teardown_appcontext
 def teardown_db(exception):
     if exception is not None:
@@ -113,9 +115,9 @@ def add_user(u: User) -> None:
     cur = con.cursor()
     cur.execute(
         """
-    INSERT INTO USERS VALUES ('?', '?')
+    INSERT INTO USERS VALUES (?, ?)
     """,
-        (u.username, u.password),
+        [u.username, u.password],
     )
     con.commit()
     return

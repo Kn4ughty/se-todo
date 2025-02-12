@@ -1,5 +1,5 @@
 import bcrypt
-from flask import request, send_file
+from flask import request, send_file, Response
 from loguru import logger as log
 
 # This is a circular import. However, flask offically reccomends it
@@ -25,7 +25,25 @@ def get_users():
     return database.get_all_users()
 
 
+@app.post("/users")
+def add_user():
+    username = request.form["username"]
+    password = request.form["password"]
+
+    u = create_user_from_raw(username, password)
+
+    if type(u) is str:
+        return Response(u, status=400)
+
+    if type(u) is User:
+        database.add_user(u)
+        return Response(status=200)
+    log.error("WTF HAPPENED")
+    return Response(status=400)
+
+
 def create_user_from_raw(username: str, password: str) -> User | str:
+    log.info(f"Creating user with username {username}")
     if len(username) >= 255:
         log.info(f"Username input was longer than 255 characters: {username}")
         return "Username must be shorter than 255 characters"

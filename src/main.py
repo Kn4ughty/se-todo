@@ -11,6 +11,8 @@ app = Flask(
     static_url_path=None,
 )
 
+# This import is below app = Flask so that modules can access the app var
+# The noqa: tells my lsp to ignore imports being below code
 from server import auth, database  # noqa: E402
 
 
