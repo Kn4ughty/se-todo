@@ -25,3 +25,10 @@ def serve_all_static_files(filename):
 @app.route("/")
 def serve_index():
     return flask.send_from_directory(STATIC_DIR, "index.html")
+
+
+@app.route("/serviceWorker.js")
+def serve_serviceWorker():
+    return flask.send_from_directory(
+        STATIC_DIR, "serviceWorker.js", mimetype="application/javascript"
+    )
