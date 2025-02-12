@@ -1,10 +1,10 @@
 {
- "name": "My PWA",
- "short_name": "PWA",
+ "name": "ToDo app",
+ "short_name": "Todo",
  "start_url": "/",
  "scope": "/",
  "display": "standalone",
- "theme_color": "#317EFB",
+ "theme_color": "#45474a",
  "background_color": "#317EFB",
  "icons": [
         {
