@@ -2,7 +2,9 @@
 
 :root {
     --text: #cdd6f4;
-    --bg-col: #45474a;
+    --bg-col: #1e1e2e;
+    --bg-dark: #11111b;
+    --surface: #313244;
 }
 
 * {
@@ -12,31 +14,35 @@
 body {
     color: var(--text);
     font-family: "Vollkorn";
+    background-color: var(--bg-col);
 }
 
 
 h1 {
-  font-size: 2em;
+    font-size: 2em;
 }
 
 
-input, button {
-  background-color: var(--bg-col);
-  border: none;
-  border-radius: 5px;
-  padding: 5px;
-  width: 80%;
+input,
+button {
+    background-color: var(--surface);
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    width: 80%;
 }
 
 button {
-  width: 60%;
-  color: #cdd6f4;
-  transition: background-color 200ms ease-out;
-  cursor:pointer;
+    width: 60%;
+    color: #cdd6f4;
+    transition: background-color 200ms ease-out;
+    cursor: pointer;
 }
 
 button:hover {
-  background-color: #585b70;
-  
+    background-color: #585b70;
 }
 
+input {
+    font-family: monospace;
+}

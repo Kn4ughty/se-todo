@@ -1,64 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ToDo Login</title>
     <style>
-@import url("/index.css");
+        @import url("/index.css");
 
-body, html {
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
-}
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
 
-label {
-    text-align: left;
-}
+        label {
+            text-align: left;
+        }
 
-#bg-image {
-    /*TODO, download that file*/
-    background-image: url('/snow.JPEG');
-    filter: blur(5px);
-    transform: scale(120%); /* Hide edges */
-    background-position: center;
-    background-repear: no-repeat;
-    background-size: cover;
-    height: 100%;
-}
+        #bg-image {
+            /*TODO, download that file*/
+            background-image: url('/snow.JPEG');
+            filter: blur(5px);
+            transform: scale(120%);
+            /* Hide edges */
+            background-position: center;
+            background-repear: no-repeat;
+            background-size: cover;
+            height: 100%;
+        }
 
-#login-box {
-    border: 1px solid var(--text);
-    width: 200px;
-    border-radius: 20px;
-    padding: 10px;
-    background-color: #1e1e2ec0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(125%);
-    text-align: center;
-    /* todo add drop shadow */
-    filter: drop-shadow(10px 10px 10px #1e1e2e);
-}
-        </style>
-  </head>
+        #login-box {
+            background-color: var(--bg-col);
+            border: 1px solid var(--text);
+            width: 200px;
+            border-radius: 20px;
+            padding: 10px;
+            /*background-color: #1e1e2ec0;*/
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(125%);
+            text-align: center;
+            /* todo add drop shadow */
+            filter: drop-shadow(10px 10px 10px #1e1e2e);
+        }
 
-  <body>
+
+        /* Style the tab */
+        .tab {
+            overflow: hidden;
+            /*background-color: #f1f1f1;*/
+        }
+
+        /* Style the buttons that are used to open the tab content */
+        .tab button {
+            width: 50%;
+            height: 5%;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+        }
+
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+            border-bottom: 3px solid #FFF;
+        }
+
+
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border-top: none;
+        }
+
+        #login {
+            display: block;
+        }
+    </style>
+    <script>
+        function choose(evt, name) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
+
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                if (tabcontent[i].classList.contains("active") == false) {
+                    tabcontent[i].style.display = "none";
+                }
+            }
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(name).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+    </script>
+</head>
+
+<body>
     <div id="bg-image"></div>
     <div id='login-box'>
-        <h1> Login </h1>
-        <form action="/login" method="post">
-          <!--<label for="fname">Username</label><br>-->
-          <input type="text" id="fname" name="username" placeholder="Username...">
-        <br>
-        <br>
-          <!--<label for="pwd">Password</label><br>-->
-          <input type="password" id="pwd" name="password" placeholder="Password..."><br><br>
+        <div class="tab">
+            <button class="tablinks active" onclick="choose(event, 'login')"> Login </button>
+            <button class="tablinks" onclick="choose(event, 'signup')"> Sign Up </button>
+        </div>
+        <div id="login" class="tabcontent">
+            <h1> Login </h1>
+            <form action="/login" method="post">
+                <!--<label for="fname">Username</label><br>-->
+                <input type="text" id="fname-login" name="username" placeholder="Username...">
+                <br>
+                <br>
+                <!--<label for="pwd">Password</label><br>-->
+                <input type="password" id="pwd-login" name="password" placeholder="Password..."><br><br>
                 <button type="submit" value="">Submit </button>
-        </form>
+            </form>
+        </div>
+        <div id="signup" class="tabcontent">
+            <h1> Sign Up </h1>
+            <form action="/signup" method="post">
+                <!--<label for="fname">Username</label><br>-->
+                <input type="text" id="fname-signup" name="username" placeholder="Username...">
+                <br>
+                <br>
+                <!--<label for="pwd">Password</label><br>-->
+                <input type="password" id="pwd-signup" name="password" placeholder="Password..."><br><br>
+                <button type="submit" value="">Submit </button>
+            </form>
+        </div>
     </div>
-  </body>
+</body>
+
 </html
