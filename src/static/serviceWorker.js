@@ -7,23 +7,56 @@ async function precache() {
     return cache.addAll(precachedResources);
 }
 
-async function cacheFirst(request) {
-    console.log(`caching: ${request}`)
-    const cachedResponse = await caches.match(request);
-    if (cachedResponse) {
-        return cachedResponse;
-    }
-    try {
-        const networkResponse = await fetch(request);
-        if (networkResponse.ok) {
-            const cache = await caches.open("MyCache_1");
-            cache.put(request, networkResponse.clone());
-        }
-        return networkResponse;
-    } catch (error) {
-        return Response.error();
-    }
-}
+
+const putInCache = async (request, response) => {
+    const cache = await caches.open("v1");
+    await cache.put(request, response);
+};
+
+
+
+
+
+// AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+//
+//const cacheFirst = async ({ request, fallbackUrl }) => {
+//    // First try to get the resource from the cache.
+//    const responseFromCache = await caches.match(request);
+//    if (responseFromCache) {
+//        return responseFromCache;
+//    }
+//
+//    // If the response was not found in the cache,
+//    // try to get the resource from the network.
+//    try {
+//        const responseFromNetwork = await fetch(request);
+//        // If the network request succeeded, clone the response:
+//        // - put one copy in the cache, for the next time
+//        // - return the original to the app
+//        // Cloning is needed because a response can only be consumed once.
+//        putInCache(request, responseFromNetwork.clone());
+//        return responseFromNetwork;
+//    } catch (error) {
+//        // If the network request failed,
+//        // get the fallback response from the cache.
+//        const fallbackResponse = await caches.match(fallbackUrl);
+//        if (fallbackResponse) {
+//            return fallbackResponse;
+//        }
+//        // When even the fallback response is not available,
+//        // there is nothing we can do, but we must always
+//        // return a Response object.
+//        return new Response("Network error happened", {
+//            status: 408,
+//            headers: { "Content-Type": "text/plain" },
+//        });
+//    }
+//};
+//
+
+// AAAAAAAAAAAAAA
+
 
 self.addEventListener('install', function(event) {
     console.log('[Service Worker] Installing Service Worker ...', event);
@@ -34,7 +67,11 @@ self.addEventListener('activate', function(event) {
 });
 self.addEventListener('fetch', function(event) {
     console.log('[Service Worker] Fetching something ...', event);
-    if (precachedResources.includes(url.pathname)) {
-        event.respondWith(cacheFirst(event.request));
-    }
+
+    //event.respondWith(
+    //    cacheFirst({
+    //        request: event.request,
+    //        fallbackUrl: "/index.html",
+    //}),
+    //);
 });
