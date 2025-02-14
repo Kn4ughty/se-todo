@@ -25,6 +25,7 @@ def login_post():
 # REMEMBER TO DELETE THIS. (dont want to leak user credentials)
 @app.get("/users")
 def get_users():
+    log.critical("THE DATABASE IS BEING STOLEN VIA THE BACKDOOR I CODED!!!!!")
     user_list = database.get_all_users()
 
     user_dict = {}
