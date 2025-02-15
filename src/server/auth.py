@@ -1,5 +1,6 @@
 import bcrypt
-from flask import request, send_file, Response
+from flask import request, Response
+from flask_httpauth import HTTPBasicAuth
 from loguru import logger as log
 import json
 
@@ -12,11 +13,22 @@ from server.types import User
 # Bcrypt guide
 # https://www.geeksforgeeks.org/hashing-passwords-in-python-with-bcrypt/
 
+basic_auth = HTTPBasicAuth()
+
+
+@basic_auth.verify_password
+def verify_password(username, password):
+    user = database.get_user(username)
+
+    pass
+
 
 @app.post("/login")
 def login_post():
     username = request.form["username"]
     password = request.form["password"]
+
+    # Return some sort of auth token?
 
     return username + " " + password
 
@@ -35,7 +47,7 @@ def get_users():
     return json.dumps(user_dict)
 
 
-@app.post("/users")
+@app.post("/signup")
 def add_user():
     username = request.form["username"]
     password = request.form["password"]
