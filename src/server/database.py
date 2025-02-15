@@ -113,6 +113,33 @@ def get_all_users() -> List[User]:
     return user_list
 
 
+def get_user(username: str) -> User:
+    cur = get_db().cursor()
+    cur.execute(
+        """
+    SELECT * FROM USERS WHERE username=?
+    """,
+        [username],
+    )
+    data = cur.fetchall()
+
+    if len(data) > 1:
+        log.error(
+            f"There are multiple users with the same name in the database.\
+            data recived: {data} "
+        )
+        raise Exception
+    u = data[0]
+
+    log.info(f"GET USER {username} RETURNED {data}")
+    return User(u[0], u[1])
+
+
+@app.get("/test")
+def test():
+    return str(get_user("woah_username"))
+
+
 # get_all_users()
 
 
