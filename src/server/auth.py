@@ -20,7 +20,7 @@ basic_auth = HTTPBasicAuth()
 def verify_password(username, password):
     user = database.get_user(username)
 
-    pass
+    ...
 
 
 @app.post("/login")
