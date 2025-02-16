@@ -113,7 +113,7 @@ def get_all_users() -> List[User]:
     return user_list
 
 
-def get_user(username: str) -> User:
+def get_user(username: str) -> User | None:
     cur = get_db().cursor()
     cur.execute(
         """
@@ -129,6 +129,10 @@ def get_user(username: str) -> User:
             data recived: {data} "
         )
         raise Exception
+    if len(data) == 0:
+        log.debug(f"No user by name {username} was found")
+        return None
+
     u = data[0]
 
     log.info(f"GET USER {username} RETURNED {data}")
@@ -146,6 +150,11 @@ def test():
 def add_user(u: User) -> None:
     con = get_db()
     cur = con.cursor()
+
+    if get_user(u.username) is not None:
+        log.error("Tried creating user with username that already exists")
+        raise Exception
+
     cur.execute(
         """
     INSERT INTO USERS VALUES (?, ?)
