@@ -7,7 +7,7 @@ import json
 # This is a circular import. However, flask offically reccomends it
 # https://flask.palletsprojects.com/en/stable/patterns/packages/
 from main import app
-import server.database as database
+import server.database as db
 from server.types import User
 
 # Bcrypt guide
@@ -24,7 +24,7 @@ def basic_auth_error(status):
 
 @basic_auth.verify_password
 def verify_password(username, password) -> User | None:
-    user = database.get_user(username)
+    user = db.get_user(username)
     if user is None:
         log.info(f"Verify was run with invalid username. {username}")
         return None
@@ -57,7 +57,7 @@ def login_post():
 @app.get("/users")
 def get_users():
     log.critical("THE DATABASE IS BEING STOLEN VIA THE BACKDOOR I CODED!!!!!")
-    user_list = database.get_all_users()
+    user_list = db.get_all_users()
 
     user_dict = {}
     for user in user_list:
@@ -77,8 +77,9 @@ def add_user():
         return Response(u, status=400)
 
     if type(u) is User:
-        database.add_user(u)
+        db.add_user(u)
         return Response(status=200)
+    # wow great log message past me. so informational
     log.error("WTF HAPPENED")
     return Response(status=400)
 
