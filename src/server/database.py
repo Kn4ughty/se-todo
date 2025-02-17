@@ -174,6 +174,9 @@ def add_token(u: User) -> None:
         )
         raise Exception
 
+    if u.token.token_expiry_time is None:
+        log.error(f"BROKEN TOKEN DETECTED. user: {u}")
+
     con = get_db()
     cur = con.cursor()
 
@@ -181,7 +184,7 @@ def add_token(u: User) -> None:
         """
     INSERT INTO TOKENS VALUES (?, ?, ?)
     """,
-        [u.username, u.token, u.token.token_expiry_time],
+        [u.username, u.token.token, u.token.token_expiry_time],
     )
     con.commit()
 
@@ -228,13 +231,13 @@ def get_user_from_token(token: str) -> None | User:
     return user
 
 
-def get_token_from_user(u: User) -> None | str:
+def get_token_from_user(u: User) -> None | Token:
     # Check if token exists
     con = get_db()
     cur = con.cursor()
     cur.execute(
         """
-    SELECT token FROM TOKENS WHERE username=?
+    SELECT token, expire_time FROM TOKENS WHERE username=?
     """,
         [u.username],
     )
@@ -246,7 +249,17 @@ def get_token_from_user(u: User) -> None | str:
             raise Exception
         return None
 
-    return result[0][0]
+    return Token(result[0][0], result[0][1])
 
 
-# def revoke_token(token: str)
+def revoke_token(token: Token):
+    con = get_db()
+    cur = con.cursor()
+    log.info(f"Revoking token {token}")
+    cur.execute(
+        """
+    DELETE FROM TOKENS WHERE token == ?
+    """,
+        [token.token],
+    )
+    con.commit()
