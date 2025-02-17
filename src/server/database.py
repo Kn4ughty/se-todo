@@ -5,7 +5,7 @@ from pathlib import Path
 import os
 from flask import g
 
-from server.types import User
+from server.types import User, Token
 from main import app
 
 # This guide is good
@@ -167,7 +167,7 @@ def add_user(u: User) -> None:
 
 
 def add_token(u: User) -> None:
-    if (not u.token) and (not u.token_expiry_time):
+    if (not u.token) and (not u.token.token_expiry_time):
         log.error(
             f"Add token db method was given user without token/expire time\n\
         User: {u}"
@@ -181,7 +181,7 @@ def add_token(u: User) -> None:
         """
     INSERT INTO TOKENS VALUES (?, ?, ?)
     """,
-        [u.username, u.token, u.token_expiry_time],
+        [u.username, u.token, u.token.token_expiry_time],
     )
     con.commit()
 
@@ -210,7 +210,7 @@ def get_user_from_token(token: str) -> None | User:
     db_token = item[1]
     token_expiry_time = item[2]
 
-    if not User.is_token_valid(token_expiry_time):
+    if not Token.is_token_valid(token_expiry_time):
         # Delete token from db
         raise NotImplementedError
 

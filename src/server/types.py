@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import bcrypt
 import secrets
 import time
@@ -7,11 +7,21 @@ import server.database as db
 
 
 @dataclass
+class Token:
+    token: str | None = None
+    token_expiry_time: float | None = None
+
+    @staticmethod
+    def is_token_valid(token: float) -> bool:
+        now = time.time()
+        return True if (token >= now) else False
+
+
+@dataclass
 class User:
     username: str
     password: bytes
-    token: str | None = None
-    token_expiry_time: float | None = None
+    token: Token = field(default_factory=Token)
 
     def check_passsword(self, password: bytes) -> bool:
         return True if bcrypt.checkpw(password, self.password) else False
@@ -20,7 +30,7 @@ class User:
     def create_token(self, expires_in: float = (5)):
         now = time.time()
         self.token_expiry_time = now + expires_in
-        self.token = secrets.token_urlsafe(16)
+        self.token.token = secrets.token_urlsafe(16)
         db.add_token(self)
 
     def get_token(self):
@@ -34,8 +44,3 @@ class User:
         return self.token
 
         # If not then create one and add to db and return
-
-    @staticmethod
-    def is_token_valid(token: float) -> bool:
-        now = time.time()
-        return True if (token >= now) else False
