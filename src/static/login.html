@@ -119,7 +119,7 @@
         </div>
         <div id="login" class="tabcontent">
             <h1> Login </h1>
-            <form action="/login" method="post">
+            <form id="login-form">
                 <!--<label for="fname">Username</label><br>-->
                 <input type="text" id="fname-login" name="username" placeholder="Username...">
                 <br>
@@ -142,6 +142,42 @@
             </form>
         </div>
     </div>
+    <script>
+
+        // handle form submission with Basic Auth
+        document.getElementById("login-form").addEventListener("submit", function (event) {
+            event.preventDefault();  // Prevent default form submission
+
+            const username = document.getElementById("fname-login").value;
+            const password = document.getElementById("pwd-login").value;
+
+            // Create the Basic Auth header (Base64 encoding)
+            const authHeader = "Basic " + btoa(username + ":" + password);
+
+            fetch('/tokens', {
+                method: 'POST',
+                headers: {
+                    'Authorization': authHeader,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.token) {
+                        alert("Login successful!");
+                        console.log(data.token)
+                        // TODO STORE THIS IN LOCALSTOREAGE
+                    } else {
+                        alert("Invalid credentials.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("An error occurred.");
+                });
+        });
+    </script>
 </body>
 
 </html

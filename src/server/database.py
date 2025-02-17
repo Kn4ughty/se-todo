@@ -190,7 +190,7 @@ def add_token(u: User) -> None:
 
 
 def get_user_from_token(token: str) -> None | User:
-    # Check if token exists
+    # Check if token exista.token
     con = get_db()
     cur = con.cursor()
     cur.execute(
@@ -226,7 +226,7 @@ def get_user_from_token(token: str) -> None | User:
         )
         raise Exception
     user.token = db_token
-    user.token_expiry_time = token_expiry_time
+    user.token.token_expiry_time = token_expiry_time
 
     return user
 

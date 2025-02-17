@@ -1,6 +1,6 @@
 import bcrypt
 from flask import request, Response, jsonify
-from flask_httpauth import HTTPBasicAuth
+from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
 from loguru import logger as log
 import json
 
@@ -13,7 +13,11 @@ from server.types import User
 # Bcrypt guide
 # https://www.geeksforgeeks.org/hashing-passwords-in-python-with-bcrypt/
 
+# flask http thing
+# https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xxiii-application-programming-interfaces-apis
+
 basic_auth = HTTPBasicAuth()
+token_auth = HTTPTokenAuth()
 
 
 @basic_auth.error_handler
@@ -34,6 +38,17 @@ def verify_password(username, password) -> User | None:
     return None
 
 
+@token_auth.error_handler
+def token_auth_error(status):
+    log.error(f"TOKEN AUTH ERROR: {status}")
+    return jsonify({"error": "Unauthorized", "message": "Invalid credentials"}), 401
+
+
+@token_auth.verify_token
+def verify_token(token: str):
+    return db.get_user_from_token(token)
+
+
 @app.post("/tokens")
 @basic_auth.login_required
 def get_token():
@@ -42,14 +57,20 @@ def get_token():
     return jsonify({"token": token.token}), 200
 
 
-@app.post("/login")
-def login_post():
-    username = request.form["username"]
-    password = request.form["password"]
-
-    # Return some sort of auth token?
-
-    return username + " " + password
+#
+# @app.post("/login")
+# def login_post():
+#     username = request.form["username"]
+#     password = request.form["password"]
+#
+#     # Return some sort of auth token?
+#     user = create_user_from_raw(username, password)
+#     if type(user) is str:
+#         return user
+#     if type(user) is User:
+#         return user.get_token()
+#     return
+#
 
 
 # TODO VERY IMPORTANT
