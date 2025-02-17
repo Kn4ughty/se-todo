@@ -39,7 +39,7 @@ def verify_password(username, password) -> User | None:
 def get_token():
     token = basic_auth.current_user().get_token()
     ...
-    return jsonify({"token": token}), 200
+    return jsonify({"token": token.token}), 200
 
 
 @app.post("/login")
