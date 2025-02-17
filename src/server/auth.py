@@ -1,5 +1,5 @@
 import bcrypt
-from flask import request, Response
+from flask import request, Response, jsonify
 from flask_httpauth import HTTPBasicAuth
 from loguru import logger as log
 import json
@@ -16,11 +16,30 @@ from server.types import User
 basic_auth = HTTPBasicAuth()
 
 
-@basic_auth.verify_password
-def verify_password(username, password):
-    user = database.get_user(username)
+@basic_auth.error_handler
+def basic_auth_error(status):
+    log.error(f"BASIC AUTH ERROR: {status}")
+    return jsonify({"error": "Unauthorized", "message": "Invalid credentials"}), 401
 
+
+@basic_auth.verify_password
+def verify_password(username, password) -> User | None:
+    user = database.get_user(username)
+    if user is None:
+        log.info(f"Verify was run with invalid username. {username}")
+        return None
+
+    if user.check_passsword(password.encode("utf-8")):
+        return user
+    return None
+
+
+@app.post("/tokens")
+@basic_auth.login_required
+def get_token():
+    token = basic_auth.current_user().get_token()
     ...
+    return jsonify({"token": token}), 200
 
 
 @app.post("/login")

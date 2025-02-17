@@ -91,6 +91,15 @@ def init_database():
                 ); """)
             con.commit()
 
+        if "TOKENS" not in list_of_tables:
+            cur.execute("""
+            CREATE TABLE TOKENS (
+            username VARCHAR(255) NOT NULL,
+            token VARCHAR(16) NOT NULL,
+            expire_time FLOAT NOT NULL
+            )
+            """)
+
 
 init_database()
 
@@ -106,7 +115,7 @@ def get_all_users() -> List[User]:
 
     user_list = []
     for user in raw_list:
-        user_list.append(User(user[0], user[1]))
+        user_list.append(User(user[0], bytes(user[1])))
 
     log.debug(f"Processed list of all users found in DB: {user_list}")
 
@@ -136,15 +145,7 @@ def get_user(username: str) -> User | None:
     u = data[0]
 
     log.info(f"GET USER {username} RETURNED {data}")
-    return User(u[0], u[1])
-
-
-@app.get("/test")
-def test():
-    return str(get_user("woah_username"))
-
-
-# get_all_users()
+    return User(u[0], bytes(u[1]))
 
 
 def add_user(u: User) -> None:
@@ -165,4 +166,87 @@ def add_user(u: User) -> None:
     return
 
 
-# add_user(conn, cur, au)
+def add_token(u: User) -> None:
+    if (not u.token) and (not u.token_expiry_time):
+        log.error(
+            f"Add token db method was given user without token/expire time\n\
+        User: {u}"
+        )
+        raise Exception
+
+    con = get_db()
+    cur = con.cursor()
+
+    cur.execute(
+        """
+    INSERT INTO TOKENS VALUES (?, ?, ?)
+    """,
+        [u.username, u.token, u.token_expiry_time],
+    )
+    con.commit()
+
+
+def get_user_from_token(token: str) -> None | User:
+    # Check if token exists
+    con = get_db()
+    cur = con.cursor()
+    cur.execute(
+        """
+    SELECT * FROM TOKENS WHERE token=?
+    """,
+        [token],
+    )
+    result = cur.fetchall()
+
+    if len(result) != 1:
+        if len(result) > 1:
+            log.error(f"Duplicicate token found. {token}")
+            raise Exception
+        return None
+
+    # If it exists, check expiry and delete accordingly
+    item = result[0]
+    username = item[0]
+    db_token = item[1]
+    token_expiry_time = item[2]
+
+    if not User.is_token_valid(token_expiry_time):
+        # Delete token from db
+        raise NotImplementedError
+
+    # Then get the user for that token.
+    user = get_user(username)
+    if user is None:
+        log.error(
+            f"Token found with username that doesnt exist. \
+        username:{username}. Token:{token}"
+        )
+        raise Exception
+    user.token = db_token
+    user.token_expiry_time = token_expiry_time
+
+    return user
+
+
+def get_token_from_user(u: User) -> None | str:
+    # Check if token exists
+    con = get_db()
+    cur = con.cursor()
+    cur.execute(
+        """
+    SELECT token FROM TOKENS WHERE username=?
+    """,
+        [u.username],
+    )
+    result = cur.fetchall()
+
+    if len(result) != 1:
+        if len(result) > 1:
+            log.error(f"Mutliple tokens for username found. user: {u}")
+            raise Exception
+        return None
+
+    return result[0][0]
+
+
+# def revoke_token(token: str)
