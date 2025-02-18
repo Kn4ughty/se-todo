@@ -8,7 +8,7 @@ import json
 # https://flask.palletsprojects.com/en/stable/patterns/packages/
 from main import app
 import server.database as db
-from server.types import User
+from server.types import User, Token
 
 # Bcrypt guide
 # https://www.geeksforgeeks.org/hashing-passwords-in-python-with-bcrypt/
@@ -52,29 +52,31 @@ def verify_token(token: str):
 @app.post("/tokens")
 @basic_auth.login_required
 def get_token():
-    token = basic_auth.current_user().get_token()
-    ...
+    u = token_auth.current_user()
+    if type(u) is not User:
+        return "ERROR", 400
+    token = u.get_token()
     return jsonify({"token": token.token}), 200
 
 
-#
-# @app.post("/login")
-# def login_post():
-#     username = request.form["username"]
-#     password = request.form["password"]
-#
-#     # Return some sort of auth token?
-#     user = create_user_from_raw(username, password)
-#     if type(user) is str:
-#         return user
-#     if type(user) is User:
-#         return user.get_token()
-#     return
-#
+@app.post("/tokenValid")
+@token_auth.login_required
+def refresh_token():
+    u = token_auth.current_user()
+    if type(u) is not User:
+        log.error(f"current_user was not a User. u:{u}")
+        return "ERROR", 400
+    token = u.get_token()
+
+    Token.is_token_valid(token.token_expiry_time)
+
+    return jsonify(Token.is_token_valid(token.token_expiry_time))
 
 
 # TODO VERY IMPORTANT
 # REMEMBER TO DELETE THIS. (dont want to leak user credentials)
+
+
 @app.get("/users")
 def get_users():
     log.critical("THE DATABASE IS BEING STOLEN VIA THE BACKDOOR I CODED!!!!!")

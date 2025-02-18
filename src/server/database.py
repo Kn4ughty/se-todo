@@ -30,8 +30,7 @@ def setup_data_directory():
 
     if os.path.exists(self_data_dir):
         log.info(
-            f"Naught data dir was found! Creating app specfic dir. = {
-                self_data_dir}"
+            f"Naught data dir was found! Creating app specfic dir. = {self_data_dir}"
         )
         os.mkdir(full_data_dir)
         return
@@ -167,9 +166,9 @@ def add_user(u: User) -> None:
 
 
 def add_token(u: User) -> None:
-    if (not u.token) and (not u.token.token_expiry_time):
+    if not u.token:
         log.error(
-            f"Add token db method was given user without token/expire time\n\
+            f"Add token db method was given user without Token set\n\
         User: {u}"
         )
         raise Exception
@@ -213,7 +212,7 @@ def get_user_from_token(token: str) -> None | User:
     db_token = item[1]
     token_expiry_time = item[2]
 
-    if not Token.is_token_valid(token_expiry_time):
+    if not Token.is_token_valid(token_expiry_time=token_expiry_time):
         # Delete token from db
         raise NotImplementedError
 
@@ -225,8 +224,7 @@ def get_user_from_token(token: str) -> None | User:
         username:{username}. Token:{token}"
         )
         raise Exception
-    user.token = db_token
-    user.token.token_expiry_time = token_expiry_time
+    user.token = Token(db_token, token_expiry_time)
 
     return user
 
