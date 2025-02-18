@@ -168,6 +168,7 @@
                         alert("Login successful!");
                         console.log(data.token)
                         localStorage.setItem("token", data.token)
+                        window.location.href = "/app.html"
                     } else {
                         alert("Invalid credentials.");
                     }
