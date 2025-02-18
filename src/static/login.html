@@ -167,7 +167,7 @@
                     if (data.token) {
                         alert("Login successful!");
                         console.log(data.token)
-                        // TODO STORE THIS IN LOCALSTOREAGE
+                        localStorage.setItem("token", data.token)
                     } else {
                         alert("Invalid credentials.");
                     }
