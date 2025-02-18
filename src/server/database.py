@@ -83,20 +83,36 @@ def init_database():
             """SELECT name FROM sqlite_master WHERE type='table'"""
         )
         list_of_tables = [row[0] for row in cur.fetchall()]
+        log.debug(f"Existing tables found, {list_of_tables}")
 
         if "USERS" not in list_of_tables:
+            log.debug("USERS not found in table list")
             cur.execute(""" CREATE TABLE USERS (
-                    username VARCHAR(255) NOT NULL,
+                    username VARCHAR(255) NOT NULL UNIQUE,
                     password CHAR(60) NOT NULL
                 ); """)
             con.commit()
 
         if "TOKENS" not in list_of_tables:
+            log.debug("TOKENS not found in table list")
             cur.execute("""
             CREATE TABLE TOKENS (
             username VARCHAR(255) NOT NULL,
-            token VARCHAR(16) NOT NULL,
+            token CHAR(16) NOT NULL UNIQUE,
             expire_time FLOAT NOT NULL
+            )
+            """)
+
+        if "TASKS" not in list_of_tables:
+            log.debug("TASKS not found in table list")
+            # uuid len comes from "len(uuid.uuid4().hex) == 32"
+            cur.execute("""
+            CREATE TABLE TASKS (
+            task_uuid CHAR(32) NOT NULL,
+            username VARCHAR(255) NOT NULL,
+            text VARCHAR(255) NOT NULL,
+            status BOOL NOT NULL,
+            PRIMARY KEY (task_uuid)
             )
             """)
 
