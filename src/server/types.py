@@ -40,6 +40,7 @@ class User:
         # Check if token exists for username in db.
         db_token = db.get_token_from_user(self)
         if db_token is not None:
+            # This is the worst line
             if db_token.is_token_valid(db_token.token_expiry_time):
                 return db_token
             else:
