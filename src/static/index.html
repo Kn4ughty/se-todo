@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -8,20 +9,30 @@
     <link rel="stylesheet" href="index.css">
     <link rel="manifest" href="/manifest.json">
     <script>
-if ('serviceWorker' in navigator) {
- window.addEventListener('load', function() {
-   navigator.serviceWorker.register("/serviceWorker.js").then(function(registration) {
-     console.log('ServiceWorker registration successful with scope: ', registration.scope);
-   }, function(err) {
-     console.log('ServiceWorker registration failed: ', err);
-   });
- });
-}
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register("/serviceWorker.js").then(function (registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function (err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+        if (!localStorage.getItem('token')) {
+            // Check if token is valid
+
+            window.location.href = "/login.html";
+        }
+        else {
+            window.location.href = "/app.html"
+        }
     </script>
-  </head>
-  <body>
+</head>
+
+<body>
     <!--<script src="index.js"></script>-->
     <h1> Hello world </h1>
     <a href="/login.html"> Woah look at this text</a>
-  </body>
+</body>
+
 </html
