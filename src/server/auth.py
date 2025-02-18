@@ -96,15 +96,11 @@ def add_user():
 
     u = create_user_from_raw(username, password)
 
-    if type(u) is str:
-        return Response(u, status=400)
+    if type(u) is not User:
+        return Response(str(u), status=400)
 
-    if type(u) is User:
-        db.add_user(u)
-        return Response(status=200)
-    # wow great log message past me. so informational
-    log.error("WTF HAPPENED")
-    return Response(status=400)
+    db.add_user(u)
+    return Response(status=200)
 
 
 def create_user_from_raw(username: str, password: str) -> User | str:
