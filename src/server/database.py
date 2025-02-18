@@ -30,7 +30,8 @@ def setup_data_directory():
 
     if os.path.exists(self_data_dir):
         log.info(
-            f"Naught data dir was found! Creating app specfic dir. = {self_data_dir}"
+            f"Naught data dir was found! Creating app specfic dir. = {
+                self_data_dir}"
         )
         os.mkdir(full_data_dir)
         return
@@ -175,6 +176,7 @@ def add_token(u: User) -> None:
 
     if u.token.token_expiry_time is None:
         log.error(f"BROKEN TOKEN DETECTED. user: {u}")
+        raise Exception
 
     con = get_db()
     cur = con.cursor()
@@ -213,8 +215,8 @@ def get_user_from_token(token: str) -> None | User:
     token_expiry_time = item[2]
 
     if not Token.is_token_valid(token_expiry_time=token_expiry_time):
-        # Delete token from db
-        raise NotImplementedError
+        revoke_token(Token(token, token_expiry_time))
+        return None
 
     # Then get the user for that token.
     user = get_user(username)
