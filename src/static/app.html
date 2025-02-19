@@ -8,15 +8,23 @@
     <title>Todo App</title>
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="app.css">
+    <script src="jquery-3.7.1.min.js"></script>
+    <script src="app.js"></script>
     <script>
     </script>
 </head>
 
 <body>
-    <script src="app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <h1> Hello world </h1>
-    <a href="/login.html"> Woah look at this text</a>
+    <form class="form1">
+        <input type="text" onsubmit="add_task(this.value)" />
+    </form>
+    <div id="todo-list">
+
+
+    </div>
+
+
 </body>
 
 </html
