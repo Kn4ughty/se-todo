@@ -30,8 +30,7 @@ def setup_data_directory():
 
     if os.path.exists(self_data_dir):
         log.info(
-            f"Naught data dir was found! Creating app specfic dir. = {
-                self_data_dir}"
+            f"Naught data dir was found! Creating app specfic dir. = {self_data_dir}"
         )
         os.mkdir(full_data_dir)
         return
@@ -112,7 +111,7 @@ def init_database():
             # uuid len comes from "len(uuid.uuid4().hex) == 32"
             cur.execute("""
             CREATE TABLE TASKS (
-                task_uuid CHAR(32) NOT NULL,
+                uuid CHAR(32) NOT NULL,
                 username VARCHAR(255) NOT NULL,
                 text VARCHAR(255) NOT NULL,
                 status BOOL NOT NULL,
