@@ -56,6 +56,7 @@ db_file_location = Path("~/.local/share/naught/todo/db.sqlite3").expanduser()
 
 
 def get_db() -> sqlite3.Connection:
+    log.debug("Databse is being gotten")
     db = getattr(g, "_database", None)
     if db is None:
         db = g._database = sqlite3.connect(db_file_location)
@@ -66,6 +67,7 @@ def get_db() -> sqlite3.Connection:
 # Its kinda weird https://flask.palletsprojects.com/en/stable/patterns/sqlite3/
 @app.teardown_appcontext
 def teardown_db(exception):
+    log.debug("Automatically closing/teardown the db")
     if exception is not None:
         log.debug(f"Teardown_appcontext exception: {exception}")
 
@@ -121,6 +123,7 @@ init_database()
 
 
 def get_all_users() -> List[User]:
+    log.debug("Get_all_users function being run")
     cur = get_db().cursor()
     cur.execute("""
     SELECT * FROM USERS
@@ -165,6 +168,8 @@ def get_user(username: str) -> User | None:
 
 
 def add_user(u: User) -> None:
+    log.info(f"Adding user to db. u: {u}")
+
     con = get_db()
     cur = con.cursor()
 
@@ -183,6 +188,8 @@ def add_user(u: User) -> None:
 
 
 def add_token(u: User) -> None:
+    log.info(f"Adding user token to db. u: {u}")
+
     if not u.token:
         log.error(
             f"Add token db method was given user without Token set\n\
@@ -207,6 +214,7 @@ def add_token(u: User) -> None:
 
 
 def get_user_from_token(token: str) -> None | User:
+    log.info(f"Getting user from token: {token}")
     # Check if token exista.token
     con = get_db()
     cur = con.cursor()
@@ -248,6 +256,7 @@ def get_user_from_token(token: str) -> None | User:
 
 
 def get_token_from_user(u: User) -> None | Token:
+    log.debug(f"Getting token from user: {u}")
     # Check if token exists
     con = get_db()
     cur = con.cursor()
@@ -269,6 +278,7 @@ def get_token_from_user(u: User) -> None | Token:
 
 
 def revoke_token(token: Token):
+    log.debug(f"Revoking token: {token}")
     con = get_db()
     cur = con.cursor()
     log.info(f"Revoking token {token}")

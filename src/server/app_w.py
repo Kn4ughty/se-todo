@@ -9,6 +9,8 @@ import server.database as db
 from server.auth import token_auth
 from server.types import User, Token
 
+# TODO. Maybe turn tasks into a class?
+
 
 def add_task_to_db(username: str, text: str, status: bool = False) -> None:
     with app.app_context():
@@ -16,6 +18,7 @@ def add_task_to_db(username: str, text: str, status: bool = False) -> None:
         cur = con.cursor()
 
         u = uuid.uuid4().hex
+        log.info(f"Task being added to db. username: {username}. uuid: {u}")
 
         cur.execute(
             """

@@ -15,8 +15,6 @@ class Token:
     @staticmethod
     def is_token_valid(token_expiry_time: float) -> bool:
         now = time.time()
-
-        log.info("ALKSJDLKSADJFKLSDJFLSDJFLKSJDFLkj")
         return True if (token_expiry_time >= now) else False
 
 
@@ -31,12 +29,14 @@ class User:
 
     # Expires in 1 day by default
     def create_token(self, expires_in: float = (60 * 60)) -> Token:
+        log.debug(f"Token being created for user: {self}")
         now = time.time()
         self.token = Token(secrets.token_urlsafe(16), (now + expires_in))
         db.add_token(self)
         return self.token
 
     def get_token(self) -> Token:
+        log.debug(f"Token being gotten for user: {self}")
         # Check if token exists for username in db.
         db_token = db.get_token_from_user(self)
         if db_token is not None:

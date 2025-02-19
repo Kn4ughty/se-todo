@@ -28,13 +28,16 @@ def basic_auth_error(status):
 
 @basic_auth.verify_password
 def verify_password(username, password) -> User | None:
+    log.debug(f"verify_password run for username: {username}")
     user = db.get_user(username)
     if user is None:
         log.info(f"Verify was run with invalid username. {username}")
         return None
 
     if user.check_passsword(password.encode("utf-8")):
+        log.debug(f"verify_password was correct for username {username}")
         return user
+    log.info(f"Verify password had incorrect password, {username}")
     return None
 
 
@@ -46,6 +49,7 @@ def token_auth_error(status):
 
 @token_auth.verify_token
 def verify_token(token: str):
+    log.info(f"Verifying token {token}")
     return db.get_user_from_token(token)
 
 
@@ -53,6 +57,7 @@ def verify_token(token: str):
 @basic_auth.login_required
 def get_token():
     u = token_auth.current_user()
+    log.debug(f"Getting token for user: {u}")
     if type(u) is not User:
         return "ERROR", 400
     token = u.get_token()
@@ -94,6 +99,7 @@ def add_user():
     username = request.form["username"]
     password = request.form["password"]
 
+    log.info(f"User being added via /signup. username: {username}")
     u = create_user_from_raw(username, password)
 
     if type(u) is not User:
