@@ -10,14 +10,15 @@ function process_all_tasks(data, status) {
     for (i = 0; i < data.length; i++) {
         task = data[i];
         all_tasks.push(task)
-        add_task(task["text"])
+        add_task(task["text"], task["uuid"])
     }
 
 }
 
-function add_task(text) {
-    $("#todo-list").append("<div><input type='checkbox'/ id=" + text + "> \
-        <label for ="+ text + ">" + text + "</input></div>");
+function add_task(text, uuid) {
+    $("#todo-list").append("<div class='task'> <input type='checkbox' / id = " + uuid + " > \
+        <label for="+ uuid + ">" + text + "</input>\
+        <i class='fa fa-trash task-delete'></i></div > ");
 }
 
 
