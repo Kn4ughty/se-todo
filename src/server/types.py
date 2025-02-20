@@ -27,7 +27,6 @@ class User:
     def check_passsword(self, password: bytes) -> bool:
         return True if bcrypt.checkpw(password, self.password) else False
 
-    # Expires in 1 day by default
     def create_token(self, expires_in: float = (60 * 60)) -> Token:
         log.debug(f"Token being created for user: {self}")
         now = time.time()
@@ -39,6 +38,7 @@ class User:
         log.debug(f"Token being gotten for user: {self}")
         # Check if token exists for username in db.
         db_token = db.get_token_from_user(self)
+
         if db_token is not None:
             # This is the worst line
             if db_token.is_token_valid(db_token.token_expiry_time):
