@@ -66,7 +66,7 @@ def get_token():
 
 @app.post("/tokenValid")
 def is_token_valid():
-    error = jsonify(0), 200
+    error = jsonify(0), 400
 
     headers = request.headers
     bearer = headers.get("Authorization")

@@ -21,21 +21,8 @@
         }
         token = localStorage.getItem('token');
 
-        function a(data, status) {
-            console.log(data)
-            if (data == 0) {
-                window.location.href = "/login.html";
-                //console.log("GOing to login screen")
-            }
-            else if (data == 1) {
-                window.location.href = "/app.html";
-                //console.log("going to app")
-            }
-        }
-
         if (!token) {
-            console.log("askjdljsdflkj")
-            //window.location.href = "/login.html";
+            window.location.href = "/login.html";
         }
         else {
             // Check if token is valid
@@ -46,7 +33,13 @@
                 headers: {
                     Authorization: 'Bearer ' + token
                 },
-                success: a,
+                success: function (response) {
+                    window.location.href = "/app.html"
+                },
+                error: function (response) {
+                    alert("Invalid token. Please log in.")
+                    window.location.href = "/login.html"
+                }
             })
 
         };
@@ -55,8 +48,8 @@
 
 <body>
     <!--<script src="index.js"></script>-->
-    <h1> Hello world </h1>
-    <a href="/login.html"> Woah look at this text</a>
+    <h1> Loading ... </h1>
+    <a href="/login.html"> If page doesn't redirect, click here</a>
 </body>
 
 </html
