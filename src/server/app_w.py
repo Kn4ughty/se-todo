@@ -38,8 +38,9 @@ def get_username_from_uuid(uuid: str) -> str:
     """,
         [uuid],
     )
+    result = cur.fetchone()
 
-    return cur.fetchone()[0]
+    return result[0]
 
 
 @app.post("/tasks")
@@ -152,3 +153,29 @@ def update_task_status():
     con.commit()
 
     return jsonify("woah"), 200
+
+
+@app.delete("/tasks")
+@token_auth.login_required
+def delete_task():
+    u = token_auth.current_user()
+    if type(u) is not User:
+        raise Exception
+
+    id = request.form["uuid"]
+    if get_username_from_uuid(id) != u.username:
+        return jsonify("we think u stole this task uuid"), 401
+
+    log.info(f"Deleting task with id {id}")
+    con = db.get_db()
+    cur = con.cursor()
+
+    cur.execute(
+        """
+    DELETE FROM TASKS WHERE uuid = ?
+    """,
+        [id],
+    )
+    con.commit()
+
+    return jsonify(), 200

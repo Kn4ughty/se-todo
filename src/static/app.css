@@ -1,0 +1,25 @@
+.task {
+    font-size: 1rem;
+    background-color: var(--surface);
+    border-radius: 1rem;
+    margin: 10px;
+    padding: 0.5rem;
+}
+
+input[type='checkbox'] {
+    width: 1rem;
+    height: 1rem;
+    border: 10px solid var(--accent);
+    background-color: var(--bg-col);
+}
+
+.task-delete {
+    font-size: 2rem !important;
+    float: right;
+    margin-right: 1rem;
+    rotate: 0deg;
+}
+
+.task-delete:hover {
+    rotate: 12deg;
+}

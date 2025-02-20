@@ -10,17 +10,38 @@ function process_all_tasks(data, status) {
     for (i = 0; i < data.length; i++) {
         task = data[i];
         all_tasks.push(task)
-        add_task(task["text"], task["uuid"])
+        add_task_to_dom(task["text"], task["uuid"])
     }
 
 }
 
-function add_task(text, uuid) {
-    $("#todo-list").append("<div class='task'> <input type='checkbox' / id = " + uuid + " > \
-        <label for="+ uuid + ">" + text + "</input>\
-        <i class='fa fa-trash task-delete'></i></div > ");
+function add_task_to_dom(text, uuid) {
+    $("#todo-list").append("<div class='task' id = '" + uuid + "'> \
+        <input type='checkbox' id = '" + uuid + "-input" + "' > \
+        <label for="+ uuid + "-input" + ">" + text + "</label>\
+        <i class='fa fa-trash task-delete' \
+        onclick='delete_task_from_server(\""+ uuid + "\")'></i></div>");
 }
 
+function delete_task_from_server(uuid) {
+    console.log(uuid);
+    response = $.ajax({
+        type: "DELETE",
+        url: "/tasks",
+        headers: {
+            Authorization: 'Bearer ' + token
+        },
+        data: {
+            "uuid": uuid
+        },
+        success: function(response) {
+            $("#" + uuid).fadeOut();
+        },
+        error: function(error) {
+            console.log("Error deleting task. Error:", error)
+        }
+    });
+}
 
 $('document').ready(function() {
 
@@ -52,7 +73,7 @@ $('document').ready(function() {
             }
         },
         )
-        add_task($("#text-entry input").val());
+        add_task_to_dom($("#text-entry input").val());
         return false;
     });
 
