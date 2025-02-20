@@ -61,21 +61,43 @@ def get_token():
     if type(u) is not User:
         return "ERROR", 400
     token = u.get_token()
-    return jsonify({"token": token.token}), 200
+    return jsonify({"token": token.token, "expires": token.token_expiry_time}), 200
 
 
 @app.post("/tokenValid")
+def is_token_valid():
+    error = jsonify("Bad token"), 400
+
+    headers = request.headers
+    bearer = headers.get("Authorization")
+    if type(bearer) is not str:
+        return jsonify("error")
+    token = bearer.split()[1]  # YourTokenHere
+
+    user = db.get_user_from_token(token)
+
+    if type(user) is not User:
+        return error
+    if type(user.token) is not Token:
+        return error
+
+    b = Token.is_token_valid(user.token.token_expiry_time)
+
+    return jsonify(b), 200
+
+
+@app.post("/refreshToken")
 @token_auth.login_required
 def refresh_token():
+    raise NotImplementedError
+
     u = token_auth.current_user()
     if type(u) is not User:
-        log.error(f"current_user was not a User. u:{u}")
-        return "ERROR", 400
-    token = u.get_token()
+        raise Exception
 
-    Token.is_token_valid(token.token_expiry_time)
+    t = u.get_token()
 
-    return jsonify(Token.is_token_valid(token.token_expiry_time))
+    return jsonify(t)
 
 
 # TODO VERY IMPORTANT

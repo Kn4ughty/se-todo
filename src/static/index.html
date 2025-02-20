@@ -8,6 +8,7 @@
     <title>Todo App</title>
     <link rel="stylesheet" href="index.css">
     <link rel="manifest" href="/manifest.json">
+    <script src="jquery-3.7.1.min.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {
@@ -18,14 +19,28 @@
                 });
             });
         }
-        if (!localStorage.getItem('token')) {
-            // Check if token is valid
-
+        token = localStorage.getItem['token'];
+        if (!token) {
             window.location.href = "/login.html";
         }
         else {
-            window.location.href = "/app.html"
-        }
+            // Check if token is valid
+            // URL is /tokenValid
+            token_status = $.ajax({
+                type: "POST",
+                url: "/tokenValid",
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+
+            }).status;
+            if (token_status == 200) {
+                window.location.href = "/app.html"
+            }
+            else if (token_status == 400) {
+                window.location.href = "/login.html"
+            }
+        };
     </script>
 </head>
 
