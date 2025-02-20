@@ -70,10 +70,15 @@ $('document').ready(function() {
             },
             data: {
                 "text": $("#text-entry input").val()
+            },
+            success: function(response) {
+                add_task_to_dom($("#text-entry input").val(), response);
+            },
+            error: function(error) {
+                console.error("Error adding task. Error: ", error)
             }
         },
         )
-        add_task_to_dom($("#text-entry input").val());
         return false;
     });
 

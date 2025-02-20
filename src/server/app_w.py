@@ -11,7 +11,7 @@ from server.types import User, Token
 
 
 # TODO. Perhapse inline this into add_task()
-def add_task_to_db(username: str, text: str, status: bool = False) -> None:
+def add_task_to_db(username: str, text: str, status: bool = False) -> str:
     with app.app_context():
         con = db.get_db()
         cur = con.cursor()
@@ -26,6 +26,8 @@ def add_task_to_db(username: str, text: str, status: bool = False) -> None:
             [u, username, text, status],
         )
         con.commit()
+
+        return u
 
 
 def get_username_from_uuid(uuid: str) -> str:
@@ -54,11 +56,11 @@ def add_task():
     text = request.form["text"]
     try:
         status = bool(request.form["status"])
-        add_task_to_db(username, text, status)
+        uid = add_task_to_db(username, text, status)
     except BadRequestKeyError:
-        add_task_to_db(username, text)
+        uid = add_task_to_db(username, text)
 
-    return jsonify(), 200
+    return jsonify(uid), 200
 
 
 @app.get("/tasks")
