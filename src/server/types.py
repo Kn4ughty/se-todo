@@ -27,7 +27,7 @@ class User:
     def check_passsword(self, password: bytes) -> bool:
         return True if bcrypt.checkpw(password, self.password) else False
 
-    def create_token(self, expires_in: float = (60 * 60)) -> Token:
+    def create_token(self, expires_in: float = (60 * 60 * 24)) -> Token:
         log.debug(f"Token being created for user: {self}")
         now = time.time()
         self.token = Token(secrets.token_urlsafe(16), (now + expires_in))
