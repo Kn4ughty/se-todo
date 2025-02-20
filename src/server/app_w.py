@@ -100,7 +100,7 @@ def update_task_text():
     id = request.form["uuid"]
 
     if get_username_from_uuid(id) != u.username:
-        return jsonify(f"we think u stole this task uuid. NO perms for you"), 401
+        return jsonify("we think u stole this task uuid"), 401
 
     con = db.get_db()
     cur = con.cursor()
@@ -136,7 +136,7 @@ def update_task_status():
     id = request.form["uuid"]
 
     if get_username_from_uuid(id) != u.username:
-        return jsonify("You stole this task uuid. NO perms for you"), 401
+        return jsonify("we think u stole this task uuid"), 401
 
     con = db.get_db()
     cur = con.cursor()
