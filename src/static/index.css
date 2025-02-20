@@ -23,7 +23,7 @@ h1 {
 }
 
 
-input,
+input[type=text],
 button {
     background-color: var(--surface);
     border: none;

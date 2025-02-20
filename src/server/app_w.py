@@ -49,6 +49,7 @@ def add_task():
     if type(u) is not User:
         raise Exception
     username = u.username
+    log.info(f"Recived data from /tasks POST: {request.form}")
     text = request.form["text"]
     try:
         status = bool(request.form["status"])
