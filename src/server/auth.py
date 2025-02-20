@@ -66,7 +66,7 @@ def get_token():
 
 @app.post("/tokenValid")
 def is_token_valid():
-    error = jsonify("Bad token"), 400
+    error = jsonify(0), 200
 
     headers = request.headers
     bearer = headers.get("Authorization")
@@ -83,7 +83,7 @@ def is_token_valid():
 
     b = Token.is_token_valid(user.token.token_expiry_time)
 
-    return jsonify(b), 200
+    return jsonify(1 * b), 200
 
 
 @app.post("/refreshToken")

@@ -19,9 +19,23 @@
                 });
             });
         }
-        token = localStorage.getItem['token'];
+        token = localStorage.getItem('token');
+
+        function a(data, status) {
+            console.log(data)
+            if (data == 0) {
+                window.location.href = "/login.html";
+                //console.log("GOing to login screen")
+            }
+            else if (data == 1) {
+                window.location.href = "/app.html";
+                //console.log("going to app")
+            }
+        }
+
         if (!token) {
-            window.location.href = "/login.html";
+            console.log("askjdljsdflkj")
+            //window.location.href = "/login.html";
         }
         else {
             // Check if token is valid
@@ -31,15 +45,10 @@
                 url: "/tokenValid",
                 headers: {
                     Authorization: 'Bearer ' + token
-                }
+                },
+                success: a,
+            })
 
-            }).status;
-            if (token_status == 200) {
-                window.location.href = "/app.html"
-            }
-            else if (token_status == 400) {
-                window.location.href = "/login.html"
-            }
         };
     </script>
 </head>
