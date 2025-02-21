@@ -50,9 +50,11 @@ h1 {
     height: 2rem;
     /*transform: translate(10%, 0)*/
     display: flex;
+    font-weight: bold;
 }
 
 #text-entry button {
+    font-family: baloo;
     height: inherit;
     text-align: center;
     margin: 0;

@@ -54,7 +54,14 @@ $('document').ready(function() {
         headers: {
             Authorization: 'Bearer ' + token
         },
-        success: process_all_tasks
+        success: process_all_tasks,
+        error: function(error) {
+            console.log("Invalid token?", error);
+            if (error.status == 401) {
+                alert("Invalid token. Please login again");
+                window.location.href = "/login.html";
+            }
+        }
     },
     )
     console.log(token)
