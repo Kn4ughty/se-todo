@@ -3,6 +3,11 @@ body {
     /*background: linear-gradient(to right, var(--accent), var(--bg-col));*/
 }
 
+h1 {
+    font-size: 3rem;
+    margin: 0px;
+}
+
 .container {
     margin: 1rem;
     padding: 1rem;
@@ -42,7 +47,6 @@ body {
 
     margin-left: 0.6rem;
     margin-right: 0.6rem;
-    width: 90%;
     height: 2rem;
     /*transform: translate(10%, 0)*/
     display: flex;
