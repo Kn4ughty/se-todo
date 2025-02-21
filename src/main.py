@@ -3,7 +3,7 @@ import flask
 from flask import Flask
 import os
 
-STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
+STATIC_DIR = os.path.join(os.path.dirname(__file__), "web")
 
 app = Flask(
     __name__,

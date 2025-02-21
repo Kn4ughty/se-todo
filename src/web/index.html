@@ -8,7 +8,7 @@
     <title>Todo App</title>
     <link rel="stylesheet" href="index.css">
     <link rel="manifest" href="/manifest.json">
-    <script src="jquery-3.7.1.min.js"></script>
+    <script src="/assets/jquery-3.7.1.min.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {
@@ -25,6 +25,7 @@
             window.location.href = "/login.html";
         }
         else {
+            return
             // Check if token is valid
             // URL is /tokenValid
             token_status = $.ajax({
@@ -48,8 +49,13 @@
 
 <body>
     <!--<script src="index.js"></script>-->
-    <h1> Loading ... </h1>
-    <a href="/login.html"> If page doesn't redirect, click here</a>
+    <div class="center">
+        <h1> Loading ... </h1>
+        <h1>
+            <i class="fa fa-spinner"></i>
+        </h1>
+        <a href="/login.html" class="fade-in"> If page doesn't redirect, click here</a>
+    </div>
 </body>
 
 </html
