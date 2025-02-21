@@ -17,8 +17,10 @@ function process_all_tasks(data, status) {
 
 function add_task_to_dom(text, uuid) {
     $("#todo-list").append("<div class='task' id = '" + uuid + "'> \
+        <div class='task-left-side'>\
         <input type='checkbox' id = '" + uuid + "-input" + "' > \
         <label for="+ uuid + "-input" + ">" + text + "</label>\
+        </div>\
         <i class='fa fa-trash task-delete' \
         onclick='delete_task_from_server(\""+ uuid + "\")'></i></div>");
 }

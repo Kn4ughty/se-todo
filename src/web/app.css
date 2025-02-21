@@ -1,9 +1,63 @@
+body {
+    background-color: var(--bg-dark);
+    /*background: linear-gradient(to right, var(--accent), var(--bg-col));*/
+}
+
+.container {
+    margin: 1rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: var(--bg-col);
+    width: 50%;
+    height: 80%;
+    left: 50%;
+    transform: translate(50%, 0%)
+}
+
 .task {
     font-size: 1rem;
     background-color: var(--surface);
     border-radius: 1rem;
-    margin: 10px;
+    margin: 0.5rem;
     padding: 0.5rem;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    align-content: stretch;
+}
+
+.task label {
+    text-align: left;
+}
+
+.task-left-side {
+    display: flex;
+    align-items: center;
+}
+
+#text-entry {
+
+    margin-left: 0.6rem;
+    margin-right: 0.6rem;
+    width: 90%;
+    height: 2rem;
+    /*transform: translate(10%, 0)*/
+    display: flex;
+}
+
+#text-entry button {
+    height: inherit;
+    text-align: center;
+    margin: 0;
+    width: 20%;
+    /*float: right;*/
+    /*position: absolute;*/
+    background-color: var(--accent);
+    color: var(--bg-col);
+    /*font-size: 2rem;*/
 }
 
 input[type='checkbox'] {
@@ -11,6 +65,7 @@ input[type='checkbox'] {
     height: 1rem;
     border: 10px solid var(--accent);
     background-color: var(--bg-col);
+    margin-right: 0.5rem;
 }
 
 .task-delete {
@@ -18,6 +73,8 @@ input[type='checkbox'] {
     float: right;
     margin-right: 1rem;
     rotate: 0deg;
+    float: right;
+    /*transform: translate(90%, 0)*/
 }
 
 .task-delete:hover {
