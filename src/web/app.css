@@ -9,14 +9,13 @@ h1 {
 }
 
 .container {
-    margin: 1rem;
+    margin: auto;
     padding: 1rem;
     border-radius: 1rem;
     background-color: var(--bg-col);
-    width: 50%;
+    width: min(90%, 500px);
     height: 80%;
     left: 50%;
-    transform: translate(50%, 0%)
 }
 
 .task {
