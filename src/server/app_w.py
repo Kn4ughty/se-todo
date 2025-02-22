@@ -129,15 +129,14 @@ def update_task_status():
         raise Exception
 
     raw_stat = request.form["status"]
-    # new_status = 0
+    id = request.form["uuid"]
+
     if raw_stat == 0 or raw_stat.lower() == "false":
         new_status = 0
     elif raw_stat == 1 or raw_stat.lower() == "true":
         new_status = 1
     else:
         return jsonify("bad status value"), 400
-
-    id = request.form["uuid"]
 
     if get_username_from_uuid(id) != u.username:
         return jsonify("we think u stole this task uuid"), 401

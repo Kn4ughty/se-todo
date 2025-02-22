@@ -10,15 +10,22 @@ function process_all_tasks(data, status) {
     for (i = 0; i < data.length; i++) {
         task = data[i];
         all_tasks.push(task)
-        add_task_to_dom(task["text"], task["uuid"])
+        add_task_to_dom(task["text"], task["uuid"], task["status"])
     }
 
 }
 
-function add_task_to_dom(text, uuid) {
+function add_task_to_dom(text, uuid, status) {
+    checked = ""
+    if (status == true) {
+        checked = "checked"
+    }
+
     $("#todo-list").append("<div class='task' id = '" + uuid + "'> \
         <div class='task-left-side'>\
-        <input type='checkbox' id = '" + uuid + "-input" + "' > \
+        <input type='checkbox' id = '" + uuid + "-input" + "' \
+        onclick='update_task_status(\"" + uuid + "\", this.checked)'\
+        " + checked + "> \
         <label for="+ uuid + "-input" + ">" + text + "</label>\
         </div>\
         <i class='fa fa-trash task-delete' \
@@ -43,6 +50,20 @@ function delete_task_from_server(uuid) {
             console.log("Error deleting task. Error:", error)
         }
     });
+}
+
+function update_task_status(uuid, status) {
+    $.ajax({
+        type: "POST",
+        url: "/updateTaskStatus",
+        headers: {
+            Authorization: 'Bearer ' + token
+        },
+        data: {
+            "status": status,
+            "uuid": uuid
+        }
+    })
 }
 
 $('document').ready(function() {
@@ -91,6 +112,13 @@ $('document').ready(function() {
         )
         return false;
     });
+
+    $(":checkbox").change(function(){
+        if(this.checked) {
+            console.log("checked");
+        }
+        console.log("test");
+    })
 
 
 });
