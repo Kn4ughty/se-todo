@@ -18,6 +18,10 @@ body {
     /*background: linear-gradient(to right, var(--accent), var(--bg-col));*/
     color: var(--text);
     font-family: main, system-ui;
+    height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 sub {
