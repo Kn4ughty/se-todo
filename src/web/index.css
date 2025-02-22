@@ -5,6 +5,7 @@
     --surface: #313244;
     --accent: #f5c2e7;
     --red: #f38ba8;
+    --subtext: #a6adc8;
 }
 
 * {
@@ -19,6 +20,10 @@ body {
     font-family: main, system-ui;
 }
 
+sub {
+    color: var(--subtext);
+    font-size: 0.8rem;
+}
 
 .center {
     position: absolute;
