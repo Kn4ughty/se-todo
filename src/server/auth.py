@@ -128,7 +128,8 @@ def add_user():
         return Response(str(u), status=400)
 
     db.add_user(u)
-    return Response(status=200)
+    token = u.create_token()
+    return jsonify({"token": token.token}), 200
 
 
 def create_user_from_raw(username: str, password: str) -> User | str:
