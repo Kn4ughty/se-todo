@@ -78,11 +78,18 @@ input[type='checkbox'] {
     font-size: 2rem !important;
     float: right;
     margin-right: 1rem;
-    rotate: 0deg;
     float: right;
-    /*transform: translate(90%, 0)*/
+
+    rotate: 0deg;
+    color: var(--text);
+    transform: scale(1);
+    transition: rotate 0.2s, color 0.2s, scale 0.2s;
+
 }
 
 .task-delete:hover {
-    rotate: 12deg;
+    rotate: 10deg;
+    color: var(--red);
+    transform: scale(1.2);
+    cursor: pointer;
 }
