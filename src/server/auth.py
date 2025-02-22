@@ -100,22 +100,6 @@ def refresh_token():
     return jsonify(t)
 
 
-# TODO VERY IMPORTANT
-# REMEMBER TO DELETE THIS. (dont want to leak user credentials)
-
-
-@app.get("/users")
-def get_users():
-    log.critical("THE DATABASE IS BEING STOLEN VIA THE BACKDOOR I CODED!!!!!")
-    user_list = db.get_all_users()
-
-    user_dict = {}
-    for user in user_list:
-        user_dict[user.username] = str(user.password)
-
-    return json.dumps(user_dict)
-
-
 @app.post("/signup")
 def add_user():
     username = request.form["username"]
