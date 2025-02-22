@@ -102,11 +102,28 @@ def refresh_token():
 
 @app.post("/signup")
 def add_user():
-    username = request.form["username"]
+    username = request.form["username"].lower()
     password = request.form["password"]
 
     log.info(f"User being added via /signup. username: {username}")
-    u = create_user_from_raw(username, password)
+
+    if not username.isalpha():
+        return jsonify("Non alpha username"), 400
+    if len(username) <= 3:
+        return jsonify("Username too short"), 400
+
+    if len(username) >= 255:
+        log.info(f"Username input was longer than 255 characters: {username}")
+        return jsonify("Username must be shorter than 255 characters"), 400
+
+    if len(password) <= 3:
+        return jsonify("Password too short"), 400
+
+    password_bytes = password.encode("utf-8")
+    salt = bcrypt.gensalt()
+    password_hash = bcrypt.hashpw(password_bytes, salt)
+
+    u = User(username, password_hash)
 
     if type(u) is not User:
         return Response(str(u), status=400)
@@ -114,15 +131,3 @@ def add_user():
     db.add_user(u)
     token = u.create_token()
     return jsonify({"token": token.token}), 200
-
-
-def create_user_from_raw(username: str, password: str) -> User | str:
-    log.info(f"Creating user with username {username}")
-    if len(username) >= 255:
-        log.info(f"Username input was longer than 255 characters: {username}")
-        return "Username must be shorter than 255 characters"
-
-    password_bytes = password.encode("utf-8")
-    salt = bcrypt.gensalt()
-    password_hash = bcrypt.hashpw(password_bytes, salt)
-    return User(username, password_hash)

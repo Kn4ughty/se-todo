@@ -6,9 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ToDo Login</title>
+    <link rel="stylesheet" href="/index.css">
+    <link rel="stylesheet" href="font.css" media="none" onload="if(media!='all')media='all'">
+    <link rel="preload" href="/assets/CourierPrime-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+    <link rel="preload" href="/assets/CourierPrime-Bold.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+    <noscript>
+        <link rel="stylesheet" href="font.css">
+    </noscript>
     <style>
-        @import url("/index.css");
-
         body,
         html {
             height: 100%;
@@ -21,8 +26,8 @@
         }
 
         #bg-image {
-            /*TODO, download that file*/
-            background-image: url('/assets/snow.JPEG');
+            /*background: linear-gradient(red, blue);*/
+            /*background: radial-gradient(circle, rgba(179, 141, 148, 1) 0%, rgba(245, 194, 204, 1) 100%);*/
             filter: blur(5px);
             transform: scale(120%);
             /* Hide edges */
@@ -35,17 +40,14 @@
         #login-box {
             background-color: var(--bg-col);
             border: 1px solid var(--text);
-            width: 200px;
+            width: min(80%, 200px);
             border-radius: 20px;
             padding: 10px;
-            /*background-color: #1e1e2ec0;*/
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(125%);
             text-align: center;
-            /* todo add drop shadow */
-            filter: drop-shadow(10px 10px 10px #1e1e2e);
+            box-shadow: 0.5rem 0.5em 0.5rem #f5c2e726;
         }
 
 
@@ -113,7 +115,7 @@
 
 <body>
     <div id="bg-image"></div>
-    <div id='login-box'>
+    <div id="login-box" class="center">
         <div class="tab">
             <button class="tablinks active" onclick="choose(event, 'login')"> Login </button>
             <button class="tablinks" onclick="choose(event, 'signup')"> Sign Up </button>
@@ -195,7 +197,8 @@
 
                 },
                 error: function (error) {
-                    console.log("Error logging in. Error:", error)
+                    console.log("Error signing up in. Error:", error)
+                    alert("Error signing up: " + error["responseText"])
                 }
             });
         });
@@ -203,4 +206,4 @@
     </script>
 </body>
 
-</html
+</html>

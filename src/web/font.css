@@ -1,0 +1,17 @@
+@font-face {
+    font-family: baloo;
+    src: url('/assets/baloo.ttf');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: main;
+    src: url('/assets/CourierPrime-Regular.ttf');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: main-bold;
+    src: url('/assets/CourierPrime-Bold.ttf');
+    font-display: swap;
+}
