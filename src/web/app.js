@@ -82,6 +82,7 @@ $('document').ready(function() {
             },
             success: function(response) {
                 add_task_to_dom($("#text-entry input").val(), response);
+                $("#text-entry input").val("");
             },
             error: function(error) {
                 console.error("Error adding task. Error: ", error)
