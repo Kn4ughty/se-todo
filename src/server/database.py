@@ -3,7 +3,7 @@ from loguru import logger as log
 from typing import List
 from pathlib import Path
 import os
-from flask import g
+from flask import g, jsonify
 
 from server.types import User, Token
 from main import app
@@ -168,7 +168,7 @@ def get_user(username: str) -> User | None:
     return User(u[0], bytes(u[1]))
 
 
-def add_user(u: User) -> None:
+def add_user(u: User) -> None | tuple:
     log.info(f"Adding user to db. u: {u}")
 
     con = get_db()
@@ -176,7 +176,7 @@ def add_user(u: User) -> None:
 
     if get_user(u.username) is not None:
         log.error("Tried creating user with username that already exists")
-        raise Exception
+        return jsonify("User with that name already exists"), 400
 
     cur.execute(
         """

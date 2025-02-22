@@ -128,6 +128,8 @@ def add_user():
     if type(u) is not User:
         return Response(str(u), status=400)
 
-    db.add_user(u)
+    if (e := db.add_user(u)) is not None:
+        return e
+
     token = u.create_token()
     return jsonify({"token": token.token}), 200

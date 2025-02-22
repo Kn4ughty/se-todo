@@ -173,6 +173,7 @@
 
                 },
                 error: function (error) {
+                    alert("Error logging in: " + error["responseText"])
                     console.log("Error logging in. Error:", error)
                 }
             });
