@@ -115,7 +115,7 @@ def init_database():
                 username VARCHAR(255) NOT NULL,
                 text VARCHAR(255) NOT NULL,
                 status BOOL NOT NULL,
-                PRIMARY KEY (task_uuid)
+                PRIMARY KEY (uuid)
             )
             """)
 
