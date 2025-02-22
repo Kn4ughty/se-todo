@@ -108,6 +108,7 @@
         }
 
     </script>
+    <script src="/assets/jquery-3.7.1.min.js"></script>
 </head>
 
 <body>
@@ -121,7 +122,7 @@
             <h1> Login </h1>
             <form id="login-form">
                 <!--<label for="fname">Username</label><br>-->
-                <input type="text" id="fname-login" name="username" placeholder="Username...">
+                <input type="text" id="username-login" name="username" placeholder="Username...">
                 <br>
                 <br>
                 <!--<label for="pwd">Password</label><br>-->
@@ -131,9 +132,9 @@
         </div>
         <div id="signup" class="tabcontent">
             <h1> Sign Up </h1>
-            <form action="/signup" method="post">
+            <form id="signup-form">
                 <!--<label for="fname">Username</label><br>-->
-                <input type="text" id="fname-signup" name="username" placeholder="Username...">
+                <input type="text" id="username-signup" name="username" placeholder="Username...">
                 <br>
                 <br>
                 <!--<label for="pwd">Password</label><br>-->
@@ -144,40 +145,61 @@
     </div>
     <script>
 
-        // handle form submission with Basic Auth
         document.getElementById("login-form").addEventListener("submit", function (event) {
             event.preventDefault();  // Prevent default form submission
 
-            const username = document.getElementById("fname-login").value;
+            const username = document.getElementById("username-login").value;
             const password = document.getElementById("pwd-login").value;
 
             // Create the Basic Auth header (Base64 encoding)
             const authHeader = "Basic " + btoa(username + ":" + password);
 
-            fetch('/tokens', {
-                method: 'POST',
+            response = $.ajax({
+                type: "POST",
+                url: "/tokens",
                 headers: {
-                    'Authorization': authHeader,
-                    'Content-Type': 'application/json'
+                    Authorization: authHeader
                 },
-                body: JSON.stringify({})
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.token) {
-                        alert("Login successful!");
-                        console.log(data.token)
-                        localStorage.setItem("token", data.token)
-                        window.location.href = "/app.html"
-                    } else {
-                        alert("Invalid credentials.");
-                    }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    alert("An error occurred.");
-                });
+                success: function (response) {
+                    alert("Login successful!");
+                    console.log(response.token)
+                    localStorage.setItem("token", response.token)
+                    window.location.href = "/app.html"
+
+                },
+                error: function (error) {
+                    console.log("Error logging in. Error:", error)
+                }
+            });
         });
+
+        document.getElementById("signup-form").addEventListener("submit", function (event) {
+            event.preventDefault();  // Prevent default form submission
+
+            const username = document.getElementById("username-signup").value;
+            const password = document.getElementById("pwd-signup").value;
+
+
+            response = $.ajax({
+                type: "POST",
+                url: "/signup",
+                data: {
+                    "username": username,
+                    "password": password,
+                },
+                success: function (response) {
+                    alert("Login successful!");
+                    console.log(response.token)
+                    localStorage.setItem("token", response.token)
+                    window.location.href = "/app.html"
+
+                },
+                error: function (error) {
+                    console.log("Error logging in. Error:", error)
+                }
+            });
+        });
+
     </script>
 </body>
 
