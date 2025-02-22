@@ -125,12 +125,11 @@
             <form id="login-form">
                 <div>
                     <input type="text" id="username-login" name="username" placeholder="Username..." required
-                        pattern="[a-z0-9_]*" minlength="3" maxlength="255">
+                        pattern="[a-zA-Z0-9_]*" minlength="3" maxlength="255">
                 </div>
                 <br>
                 <!--<label for="pwd">Password</label><br>-->
-                <input type="password" id="pwd-login" name="password" placeholder="Password..." required
-                    pattern="[a-z0-9_]*" minlength="3"><br><br>
+                <input type="password" id="pwd-login" name="password" placeholder="Password..." required minlength="3"><br><br>
                 <button type="submit" value="">Submit </button>
             </form>
         </div>
