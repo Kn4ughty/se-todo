@@ -21,20 +21,22 @@ function process_all_tasks(data, status) {
 }
 
 function add_task_to_dom(text, uuid, status) {
-    checked = ""
+    let checked = ""
+    let label_style = ""
     if (status == true) {
         checked = "checked"
+        label_style = 'style="text-decoration: line-through;"'
     }
 
     checkbox_id = uuid + "-input"
     checkbox = "<input type='checkbox' id = '" + checkbox_id + "' \
-        onclick='update_task_status(\"" + uuid + "\", this.checked)'\
+        onclick='update_task_status(\"" + uuid + "\", this)'\
         " + checked + ">"
  
 
     $("#todo-list").append("<div class='task' id = '" + uuid + "'> \
         <div class='task-left-side'>" + checkbox +"\
-        <label for="+ checkbox_id + ">" + text + "</label>\
+        <label for="+ checkbox_id + " " + label_style + ">" + text + "</label>\
         </div>\
         <i class='fa fa-trash task-delete' \
         onclick='delete_task_from_server(\""+ uuid + "\")'></i></div>");
@@ -60,7 +62,14 @@ function delete_task_from_server(uuid) {
     });
 }
 
-function update_task_status(uuid, status) {
+function update_task_status(uuid, element) {
+    // Not having this let here cause me a world of hurt.
+    // It was being overwritten by a different variable named status
+    // This meant that everything was broken and nothing worked.
+    // this would be fine if status was like a global variable
+    // BUT IT WAS A VARIABLE NAMED STATUS IN A DIFFERENT FUNCTION
+    // I hate JS SO FRIGGIN MUCH AAAAAAAAAAAAA
+    let status = (element.checked === true);
     $.ajax({
         type: "POST",
         url: "/updateTaskStatus",
@@ -72,8 +81,15 @@ function update_task_status(uuid, status) {
             "uuid": uuid
         }
     })
-    if ((status == true) && confettiEnabled) {
-        window.confetti({"origin" : {"x": 0.5, "y": 1}})
+    text_id = "#" + uuid + " .task-left-side label"
+    if (status === true) {
+        $("#" + uuid + " .task-left-side label").css("text-decoration", "line-through");
+        if (confettiEnabled) {
+            window.confetti({"origin" : {"x": 0.5, "y": 1}})
+        }
+    }
+    else {
+        $("#" + uuid + " .task-left-side label").css("text-decoration", "none");
     }
 }
 
