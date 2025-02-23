@@ -109,7 +109,7 @@ def add_user():
 
     if not username.replace("_", "").isalpha():
         return jsonify("Non alpha username"), 400
-    if len(username) <= 3:
+    if len(username) < 3:
         return jsonify("Username too short"), 400
 
     if len(username) >= 255:
