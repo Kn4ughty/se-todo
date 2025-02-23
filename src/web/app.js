@@ -9,7 +9,6 @@ else {
     confettiEnabled = false
 }
 
-//all_tasks = []
 
 function process_all_tasks(data, status) {
     all_tasks = []
@@ -27,8 +26,6 @@ function add_task_to_dom(text, uuid, status) {
         checked = "checked"
     }
 
-
-
     checkbox_id = uuid + "-input"
     checkbox = "<input type='checkbox' id = '" + checkbox_id + "' \
         onclick='update_task_status(\"" + uuid + "\", this.checked)'\
@@ -41,12 +38,6 @@ function add_task_to_dom(text, uuid, status) {
         </div>\
         <i class='fa fa-trash task-delete' \
         onclick='delete_task_from_server(\""+ uuid + "\")'></i></div>");
-
-    if (confettiEnabled) {
-        console.log("attempt" + checkbox_id);
-        //new Confetti(checkbox_id).destroyTarget(false);
-    }
-
 }
 
 function delete_task_from_server(uuid) {
@@ -82,7 +73,7 @@ function update_task_status(uuid, status) {
         }
     })
     if ((status == true) && confettiEnabled) {
-        window.confetti()
+        window.confetti({"origin" : {"x": 0.5, "y": 1}})
     }
 }
 
@@ -132,6 +123,15 @@ $('document').ready(function() {
         )
         return false;
     });
+    
+    confetti_switch = "<input type='checkbox' id='confetti-toggle' onclick='localStorage.setItem(\"confetti\", this.checked); location.reload()'"
+ 
+    if (confettiEnabled) {
+        $("#confetti-toggler").prepend(confetti_switch+"checked>")
+    }
+    else {
+        $("#confetti-toggler").prepend(confetti_switch+">")
+    }
 
 });
 
