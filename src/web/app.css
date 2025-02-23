@@ -87,3 +87,14 @@ input[type='checkbox'] {
     transform: scale(1.2);
     cursor: pointer;
 }
+
+#top-right-settings {
+    font-size: 2rem;
+    position: absolute;
+    left: 90%;
+    text-align: center;
+}
+
+#top-right-settings .p {
+    font-size: 1rem;
+}

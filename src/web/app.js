@@ -1,11 +1,17 @@
 
 token = localStorage.getItem("token");
 
+confettiEnabled = localStorage.getItem("confetti")
+if (confettiEnabled == "true") {
+    confettiEnabled = true
+}
+else {
+    confettiEnabled = false
+}
+
 //all_tasks = []
 
 function process_all_tasks(data, status) {
-    console.log("KASJDLKSDJFLKDJF")
-    console.log(data)
     all_tasks = []
     for (i = 0; i < data.length; i++) {
         task = data[i];
@@ -21,15 +27,26 @@ function add_task_to_dom(text, uuid, status) {
         checked = "checked"
     }
 
-    $("#todo-list").append("<div class='task' id = '" + uuid + "'> \
-        <div class='task-left-side'>\
-        <input type='checkbox' id = '" + uuid + "-input" + "' \
+
+
+    checkbox_id = uuid + "-input"
+    checkbox = "<input type='checkbox' id = '" + checkbox_id + "' \
         onclick='update_task_status(\"" + uuid + "\", this.checked)'\
-        " + checked + "> \
-        <label for="+ uuid + "-input" + ">" + text + "</label>\
+        " + checked + ">"
+ 
+
+    $("#todo-list").append("<div class='task' id = '" + uuid + "'> \
+        <div class='task-left-side'>" + checkbox +"\
+        <label for="+ checkbox_id + ">" + text + "</label>\
         </div>\
         <i class='fa fa-trash task-delete' \
         onclick='delete_task_from_server(\""+ uuid + "\")'></i></div>");
+
+    if (confettiEnabled) {
+        console.log("attempt" + checkbox_id);
+        //new Confetti(checkbox_id).destroyTarget(false);
+    }
+
 }
 
 function delete_task_from_server(uuid) {
@@ -64,6 +81,9 @@ function update_task_status(uuid, status) {
             "uuid": uuid
         }
     })
+    if ((status == true) && confettiEnabled) {
+        window.confetti()
+    }
 }
 
 $('document').ready(function() {
@@ -112,14 +132,6 @@ $('document').ready(function() {
         )
         return false;
     });
-
-    $(":checkbox").change(function(){
-        if(this.checked) {
-            console.log("checked");
-        }
-        console.log("test");
-    })
-
 
 });
 
