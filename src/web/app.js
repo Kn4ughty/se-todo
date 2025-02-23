@@ -44,7 +44,7 @@ function delete_task_from_server(uuid) {
             "uuid": uuid
         },
         success: function(response) {
-            $("#" + uuid).fadeOut();
+            $("#" + uuid).fadeOut(100);
         },
         error: function(error) {
             console.log("Error deleting task. Error:", error)
