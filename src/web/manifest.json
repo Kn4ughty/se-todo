@@ -3,9 +3,9 @@
  "short_name": "Todo",
  "start_url": "/",
  "scope": "/",
- "display": "standalone",
- "theme_color": "#45474a",
- "background_color": "#317EFB",
+ "display": "fullscreen",
+ "theme_color": "#1e1e2e",
+ "background_color": "#FF00FF",
  "icons": [
         {
             "src": "icons/icon192x192.png",
