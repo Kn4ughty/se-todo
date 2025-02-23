@@ -30,6 +30,7 @@ h1 {
 
 .task label {
     text-align: left;
+    cursor: pointer;
 }
 
 .task-left-side {
@@ -66,6 +67,7 @@ input[type='checkbox'] {
     border: 10px solid var(--accent);
     background-color: var(--bg-col);
     margin-right: 0.5rem;
+    cursor: pointer;
 }
 
 .task-delete {
