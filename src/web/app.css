@@ -89,12 +89,25 @@ input[type='checkbox'] {
 }
 
 #top-right-settings {
+    margin-right: 1rem;
+    margin-top: 1rem;
     font-size: 2rem;
     position: absolute;
-    left: 90%;
+    top: 0px;
+    right: 0px;
     text-align: center;
+    /*Flex box probably required here later*/
 }
 
 #top-right-settings .p {
     font-size: 1rem;
+}
+
+.option {
+    padding: 0.2rem;
+    background: var(--surface1);
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 3px 3px 2px var(--surface);
 }

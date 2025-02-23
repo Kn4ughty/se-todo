@@ -29,12 +29,14 @@
 <body>
 
     <div id="top-right-settings">
-        <label class="p" for="confetti-toggler">🎉</label>
-        <label class="switch" id="confetti-toggler">
-            <input type="checkbox" id="confetti-toggle"
-                onclick="localStorage.setItem('confetti', this.checked); location.reload()">
-            <span class="slider round"></span>
-        </label>
+        <div class="option">
+            <label class="p" for="confetti-toggler">🎉</label>
+            <label class="switch" id="confetti-toggler">
+                <input type="checkbox" id="confetti-toggle"
+                    onclick="localStorage.setItem('confetti', this.checked); location.reload()">
+                <span class="slider round"></span>
+            </label>
+        </div>
     </div>
     <div class="container">
         <h1 class="center-x"> Todo! </h1>
