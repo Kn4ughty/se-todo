@@ -15,15 +15,16 @@
     font-family: main, system-ui;
 }
 
+
+
 body {
     background: linear-gradient(45deg, var(--bg-dark) 0%, var(--bg-col) 100%);
-    /*background: linear-gradient(to right, var(--accent), var(--bg-col));*/
     color: var(--text);
     font-family: main, system-ui;
-    height: 100vh;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    background-attachment: fixed;
 }
 
 sub {

@@ -1,3 +1,8 @@
+body {
+    display: flex;
+    flex-direction: column;
+}
+
 h1 {
     font-size: 3rem;
     margin: 0px;
@@ -5,11 +10,12 @@ h1 {
 
 .container {
     margin: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     padding: 1rem;
     border-radius: 1rem;
     background-color: var(--bg-col);
     width: min(90%, 500px);
-    height: 80%;
     left: 50%;
     box-shadow: 4px 4px 2px var(--surface);
     border: 1px solid var(--accent);
