@@ -11,6 +11,8 @@ h1 {
     width: min(90%, 500px);
     height: 80%;
     left: 50%;
+    box-shadow: 4px 4px 2px var(--surface);
+    border: 1px solid var(--accent);
 }
 
 .task {
@@ -111,5 +113,5 @@ input[type='checkbox'] {
     border-radius: 0.5rem;
     display: flex;
     flex-direction: column;
-    box-shadow: 3px 3px 2px var(--surface);
+    box-shadow: var(--drop-shadow);
 }
