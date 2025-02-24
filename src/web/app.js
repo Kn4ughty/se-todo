@@ -96,7 +96,7 @@ function edit_task(uuid) {
     input.on("blur", exit_edit_mode);
     input.on("keydown", function(event) {
         console.log("event", event)
-        if (event.key === "Enter") {
+        if (event.key === "Enter" || event.key === "Escape") {
             exit_edit_mode();
         }
     })
