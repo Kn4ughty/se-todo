@@ -201,7 +201,9 @@ $('document').ready(function() {
         return false;
     });
 
-    confetti_switch = "<input type='checkbox' id='confetti-toggle' onclick='localStorage.setItem(\"confetti\", this.checked); location.reload()'"
+    confetti_switch = "<input type='checkbox' id='confetti-toggle' \
+        onclick='localStorage.setItem(\"confetti\", this.checked); \
+        confettiEnabled = this.checked'"
 
     if (confettiEnabled) {
         $("#confetti-toggler").prepend(confetti_switch + "checked>")
