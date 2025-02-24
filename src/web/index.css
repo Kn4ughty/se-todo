@@ -141,7 +141,7 @@ input {
     bottom: 0;
     background-color: var(--surface);
     -webkit-transition: 0s;
-    transition: 0s;
+    transition: 0.4s;
 }
 
 .slider:before {
@@ -153,7 +153,7 @@ input {
     bottom: 0px;
     background-color: white;
     -webkit-transition: .4s;
-    transition: 0s;
+    transition: 0.4s;
 }
 
 input:checked+.slider {

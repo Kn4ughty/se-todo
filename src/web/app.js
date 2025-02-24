@@ -202,6 +202,7 @@ $('document').ready(function() {
     });
 
     confetti_switch = "<input type='checkbox' id='confetti-toggle' \
+        aria-label='Confetti Toggle Switch' \
         onclick='localStorage.setItem(\"confetti\", this.checked); \
         confettiEnabled = this.checked'"
 
