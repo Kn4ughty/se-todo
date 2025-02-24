@@ -28,6 +28,7 @@ def basic_auth_error(status):
 
 @basic_auth.verify_password
 def verify_password(username, password) -> User | None:
+    username = username.lower()
     log.debug(f"verify_password run for username: {username}")
     user = db.get_user(username)
     if user is None:
