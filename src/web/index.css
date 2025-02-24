@@ -90,6 +90,11 @@ button {
     border-radius: 5px;
     padding: 5px;
     width: 80%;
+    font-size: 1em;
+}
+
+textarea {
+    width: 100% !important;
 }
 
 button {
