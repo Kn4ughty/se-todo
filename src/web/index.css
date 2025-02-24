@@ -6,6 +6,7 @@
     --surface1: #45475a;
     --accent: #f5c2e7;
     --red: #f38ba8;
+    --green: #a6e3a1;
     --subtext: #a6adc8;
     --drop-shadow: 3px 3px 2px var(--surface);
 }
@@ -82,6 +83,7 @@ h1 {
 
 input[type=text],
 input[type=password],
+textarea,
 button {
     background-color: var(--surface);
     border: none;

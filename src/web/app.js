@@ -20,26 +20,87 @@ function process_all_tasks(data, status) {
 
 }
 
+
 function add_task_to_dom(text, uuid, status) {
     let checked = ""
     let label_style = ""
     if (status == true) {
         checked = "checked"
-        label_style = 'style="text-decoration: line-through;"'
+        label_style = 'style="text-decoration: line-through;" '
     }
 
-    checkbox_id = uuid + "-input"
-    checkbox = "<input type='checkbox' id = '" + checkbox_id + "' \
+    let checkbox_id = uuid + "-input"
+    let checkbox = "<input type='checkbox' id = '" + checkbox_id + "' \
         onclick='update_task_status(\"" + uuid + "\", this)'\
         " + checked + ">"
- 
 
-    $("#todo-list").append("<div class='task' id = '" + uuid + "'> \
-        <div class='task-left-side'>" + checkbox +"\
-        <label for="+ checkbox_id + " " + label_style + ">" + text + "</label>\
-        </div>\
-        <i class='fa fa-trash task-delete' \
-        onclick='delete_task_from_server(\""+ uuid + "\")'></i></div>");
+    let label = "<label for=" + checkbox_id + " " + label_style + "\
+    " + "onclick=''>" + text + "</label>"
+
+    //let label = "<label " + label_style + "\
+    //" + "onclick=''>" + text + "</label>"
+
+    $("#todo-list").append("\
+        <div class='task' id = '" + uuid + "'> \
+            <div class='task-left-side'>\
+                " + checkbox + "\
+                " + label + "\
+            </div>\
+            <div class='task-right-side'>  \
+                <i class='fa fa-pen' \
+                onclick='edit_task(\"" + uuid + "\")' ></i>\
+                <i class='fa fa-trash task-delete' \
+                onclick='delete_task_from_server(\""+ uuid + "\")'></i>\
+            </div>\
+        </div>");
+}
+
+function edit_task(uuid) {
+    let element = $("#" + uuid + " .task-left-side label")
+    let old_label = element[0]
+    let text = old_label.innerText
+
+    // Generate a new input element with old text
+    let input = $("<textarea type='text' class='task-edit'>").val(text)
+    console.log(input[0])
+
+    old_label.replaceWith(input[0])
+    input.focus();
+
+    function exit_edit_mode() {
+        let new_text = input.val();
+        console.log("This is old label", old_label)
+        old_label.textContent = new_text;
+        let new_label = old_label;
+        input.replaceWith(new_label)
+        console.log("Sending request to server with updated text")
+        response = $.ajax({
+            type: "POST",
+            url: "/updateTaskText",
+            headers: {
+                Authorization: 'Bearer ' + token
+            },
+            data: {
+                "uuid": uuid,
+                "text": new_text
+            },
+            success: function(response) {
+                console.log("Success updating task text")
+            },
+            error: function(error) {
+                console.log("Error changing task text :(. Error:", error)
+            }
+        });
+
+    }
+    input.on("blur", exit_edit_mode);
+    input.on("keydown", function(event) {
+        console.log("event", event)
+        if (event.key === "Enter") {
+            exit_edit_mode();
+        }
+    })
+
 }
 
 function delete_task_from_server(uuid) {
@@ -85,7 +146,7 @@ function update_task_status(uuid, element) {
     if (status === true) {
         $("#" + uuid + " .task-left-side label").css("text-decoration", "line-through");
         if (confettiEnabled) {
-            window.confetti({"origin" : {"x": 0.5, "y": 1}})
+            window.confetti({ "origin": { "x": 0.5, "y": 1 } })
         }
     }
     else {
@@ -139,14 +200,14 @@ $('document').ready(function() {
         )
         return false;
     });
-    
+
     confetti_switch = "<input type='checkbox' id='confetti-toggle' onclick='localStorage.setItem(\"confetti\", this.checked); location.reload()'"
- 
+
     if (confettiEnabled) {
-        $("#confetti-toggler").prepend(confetti_switch+"checked>")
+        $("#confetti-toggler").prepend(confetti_switch + "checked>")
     }
     else {
-        $("#confetti-toggler").prepend(confetti_switch+">")
+        $("#confetti-toggler").prepend(confetti_switch + ">")
     }
 
 });

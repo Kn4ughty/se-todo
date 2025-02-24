@@ -79,8 +79,25 @@ input[type='checkbox'] {
     cursor: pointer;
 }
 
-.task-delete {
-    font-size: 2rem !important;
+
+.task-edit {
+    width: 100% !important;
+    background: none !important;
+}
+
+.task-right-side {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.fa {
+    margin: 0.2rem;
+    font-size: 1.8rem !important;
+}
+
+.task-delete,
+.fa-pen {
     float: right;
     margin-right: 1rem;
     float: right;
@@ -92,11 +109,16 @@ input[type='checkbox'] {
 
 }
 
-.task-delete:hover {
+.task-delete:hover,
+.fa-pen:hover {
     rotate: 10deg;
     color: var(--red);
     transform: scale(1.2);
     cursor: pointer;
+}
+
+.fa-pen:hover {
+    color: var(--green);
 }
 
 #top-right-settings {
