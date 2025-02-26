@@ -214,7 +214,7 @@ $('document').ready(function() {
         }
     },
     )
-    console.log(token)
+    //console.log(token)
     console.log(all_tasks)
 
     // Then put them onto the page
