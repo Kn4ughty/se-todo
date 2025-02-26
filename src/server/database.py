@@ -30,7 +30,8 @@ def setup_data_directory():
 
     if os.path.exists(self_data_dir):
         log.info(
-            f"Naught data dir was found! Creating app specfic dir. = {self_data_dir}"
+            f"Naught data dir was found! \
+            Creating app specfic dir. = {self_data_dir}"
         )
         os.mkdir(full_data_dir)
         return
@@ -44,18 +45,17 @@ def setup_data_directory():
         f"{local_share} directory was not found. This is strange.\
     Make the directory manually to continue"
     )
+    exit()
 
 
 setup_data_directory()
 
 # this should be based on all the fancy path planning used in the above func
 db_file_location = Path("~/.local/share/naught/todo/db.sqlite3").expanduser()
-# conn = sqlite3.connect(db_file_location)
-# cur = conn.cursor()
 
 
 def get_db() -> sqlite3.Connection:
-    log.debug("Databse is being gotten")
+    log.debug("Database is being gotten")
     db = getattr(g, "_database", None)
     if db is None:
         db = g._database = sqlite3.connect(db_file_location)
@@ -115,6 +115,7 @@ def init_database():
                 username VARCHAR(255) NOT NULL,
                 text VARCHAR(255) NOT NULL,
                 status BOOL NOT NULL,
+                order INT,
                 PRIMARY KEY (uuid)
             )
             """)
