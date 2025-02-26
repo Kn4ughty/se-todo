@@ -1,3 +1,6 @@
+// Tasks and their data are stored in the DOM.
+// I thought it would be bad to duplicate data
+
 
 token = localStorage.getItem("token");
 
@@ -11,13 +14,29 @@ else {
 
 
 function process_all_tasks(data, status) {
-    all_tasks = []
+    completed = []
     for (i = 0; i < data.length; i++) {
         task = data[i];
-        all_tasks.push(task)
+        if (task["status"] == true) {
+            completed.push(task)
+            continue
+        }
+        add_task_to_dom(task["text"], task["uuid"], task["status"])
+    }
+    for (i = 0; i < completed.length; i++) {
+        task = completed[i];
         add_task_to_dom(task["text"], task["uuid"], task["status"])
     }
 
+}
+
+// This awesome function is from https://stackoverflow.com/questions/8433691/sorting-list-of-elements-in-jquery
+function getSorted(selector, attrName) {
+    return $($(selector).toArray().sort(function(a, b) {
+        var aVal = parseInt(a.getAttribute(attrName)),
+            bVal = parseInt(b.getAttribute(attrName));
+        return aVal - bVal;
+    }));
 }
 
 
@@ -36,9 +55,6 @@ function add_task_to_dom(text, uuid, status) {
 
     let label = "<label for=" + checkbox_id + " " + label_style + "\
     " + "onclick=''>" + text + "</label>"
-
-    //let label = "<label " + label_style + "\
-    //" + "onclick=''>" + text + "</label>"
 
     $("#todo-list").append("\
         <div class='task' id = '" + uuid + "'> \
@@ -148,6 +164,31 @@ function update_task_status(uuid, element) {
         if (confettiEnabled) {
             window.confetti({ "origin": { "x": 0.5, "y": 1 } })
         }
+        // This delay makes it so that if you accidentally checked the task,
+        // you can then undo it by unchecking it in that timeout
+        function moveTask() {
+            if (element.checked === true) {
+                // First check if task is at the bottom.
+                e = $("#" + uuid)
+                tasks = $(".task")
+                if (tasks[tasks.length - 1].id == uuid) {
+                    console.log("Task was already at bottom")
+                    return
+                }
+
+                // Move task to bottom
+                console.log("Moving task")
+                e.fadeOut(400, (() => {
+                    console.log("Appending task")
+                    e.appendTo("#todo-list")
+                    e.fadeIn()
+                }))
+            }
+            else {
+                console.log("Not checked")
+            }
+        }
+        setTimeout(moveTask, 1000)
     }
     else {
         $("#" + uuid + " .task-left-side label").css("text-decoration", "none");
