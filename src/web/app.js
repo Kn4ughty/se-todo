@@ -63,9 +63,9 @@ function add_task_to_dom(text, uuid, status) {
                 " + label + "\
             </div>\
             <div class='task-right-side'>  \
-                <i class='fa fa-pen' \
+                <i class='fa fa-pen' aria-label='Edit task' \
                 onclick='edit_task(\"" + uuid + "\")' ></i>\
-                <i class='fa fa-trash task-delete' \
+                <i class='fa fa-trash task-delete' aria-label='Delete task' \
                 onclick='delete_task_from_server(\""+ uuid + "\")'></i>\
             </div>\
         </div>");
