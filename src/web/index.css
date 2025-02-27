@@ -19,7 +19,7 @@
 
 
 body {
-    background: linear-gradient(45deg, var(--bg-dark) 0%, var(--bg-col) 100%);
+    background: linear-gradient(0deg, var(--bg-dark) 0%, var(--surface) 100%);
     color: var(--text);
     font-family: main, system-ui;
     background-position: center;
