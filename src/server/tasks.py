@@ -88,6 +88,7 @@ def get_all_tasks():
         # Skip username as its not required
         d["text"] = task[2]
         d["status"] = task[3]
+        d["order"] = task[4]
         a.append(d)
 
     return jsonify(a)
@@ -176,6 +177,35 @@ def delete_task():
     DELETE FROM TASKS WHERE uuid = ?
     """,
         [id],
+    )
+    con.commit()
+
+    return jsonify(), 200
+
+
+@app.post("/taskOrder")
+@token_auth.login_required
+def change_task_order():
+    u = token_auth.current_user()
+    if type(u) is not User:
+        raise Exception
+
+    new_order = int(request.form["order"])
+    uuid = request.form["uuid"]
+
+    if get_username_from_uuid(uuid) != u.username:
+        return jsonify("we think u stole this task uuid"), 401
+
+    con = db.get_db()
+    cur = con.cursor()
+
+    cur.execute(
+        """
+        UPDATE TASKS
+        SET item_order = (?)
+        WHERE uuid = (?)
+    """,
+        [new_order, uuid],
     )
     con.commit()
 

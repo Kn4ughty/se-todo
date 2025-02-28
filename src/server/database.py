@@ -111,11 +111,11 @@ def init_database():
             # uuid len comes from "len(uuid.uuid4().hex) == 32"
             cur.execute("""
             CREATE TABLE TASKS (
-                uuid CHAR(32) NOT NULL,
+                uuid CHAR(32) NOT NULL UNIQUE,
                 username VARCHAR(255) NOT NULL,
                 text VARCHAR(255) NOT NULL,
                 status BOOL NOT NULL,
-                order INT,
+                item_order INT,
                 PRIMARY KEY (uuid)
             )
             """)
