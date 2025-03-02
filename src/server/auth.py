@@ -108,8 +108,8 @@ def add_user():
 
     log.info(f"User being added via /signup. username: {username}")
 
-    if not username.replace("_", "").isalpha():
-        return jsonify("Non alpha username"), 400
+    if not username.replace("_", "").isalnum():
+        return jsonify("Non alpha numeric username"), 400
     if len(username) < 3:
         return jsonify("Username too short"), 400
 
