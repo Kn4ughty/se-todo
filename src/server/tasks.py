@@ -21,9 +21,9 @@ def add_task_to_db(username: str, text: str, status: bool = False) -> str:
 
         cur.execute(
             """
-            INSERT INTO TASKS VALUES (?, ?, ?, ?)
+            INSERT INTO TASKS VALUES (?, ?, ?, ?, ?)
         """,
-            [u, username, text, status],
+            [u, username, text, status, None],
         )
         con.commit()
 
