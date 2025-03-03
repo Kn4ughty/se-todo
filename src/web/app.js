@@ -8,8 +8,12 @@ confettiEnabled = localStorage.getItem("confetti")
 if (confettiEnabled == "true") {
     confettiEnabled = true
 }
-else {
+else if (confettiEnabled == "false") {
     confettiEnabled = false
+}
+else {
+    confettiEnabled = true
+    localStorage.setItem('confetti', 'true')
 }
 
 
