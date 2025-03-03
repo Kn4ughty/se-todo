@@ -14,6 +14,16 @@ else {
 
 
 function process_all_tasks(data, status) {
+    // Data is a json array of items
+    sorted = data.sort(function(a, b) {
+        var aVal = a["order"],
+            bVal = b["order"]
+        return bVal - aVal
+    })
+    console.log(sorted)
+    data = sorted
+
+
     completed = []
     for (i = 0; i < data.length; i++) {
         task = data[i];
@@ -27,7 +37,6 @@ function process_all_tasks(data, status) {
         task = completed[i];
         add_task_to_dom(task["text"], task["uuid"], task["status"])
     }
-
 }
 
 // This awesome function is from https://stackoverflow.com/questions/8433691/sorting-list-of-elements-in-jquery
