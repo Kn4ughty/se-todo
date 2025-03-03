@@ -4,7 +4,8 @@
  "start_url": "/",
  "scope": "/",
  "display": "fullscreen",
- "theme_color": "#1e1e2e",
+ /* #313244*/
+ "theme_color": "#313244",
  "background_color": "#1e1e2e",
  "icons": [
         {
