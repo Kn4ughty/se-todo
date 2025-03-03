@@ -52,6 +52,29 @@ function getSorted(selector, attrName) {
     }));
 }
 
+// This function from
+function escapeHTML(str) {
+    return str.replace(/[&<>"'\/]/g, function(char) {
+        switch (char) {
+            case '&':
+                return '&amp;';
+            case '<':
+                return '&lt;';
+            case '>':
+                return '&gt;';
+            case '"':
+                return '&quot;';
+            case '\'':
+                return '&#39;';
+            case '/':
+                return '&#x2F;';
+            default:
+                return char;
+        }
+    });
+}
+
+
 
 function add_task_to_dom(text, uuid, status) {
     let checked = ""
@@ -243,7 +266,7 @@ $('document').ready(function() {
                 "text": $("#text-entry input").val()
             },
             success: function(response) {
-                add_task_to_dom($("#text-entry input").val(), response);
+                add_task_to_dom(escapeHTML($("#text-entry input").val()), response);
                 $("#text-entry input").val("");
             },
             error: function(error) {

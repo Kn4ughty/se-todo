@@ -1,4 +1,5 @@
 from loguru import logger as log
+import flask
 from flask import Flask, jsonify, request, Response
 import uuid
 from werkzeug.exceptions import BadRequestKeyError
@@ -86,7 +87,9 @@ def get_all_tasks():
         d = {}
         d["uuid"] = task[0]
         # Skip username as its not required
-        d["text"] = task[2]
+        t = flask.render_template_string("{{t}}", t=task[2])
+        log.error(f"Sanitised text, {t}")
+        d["text"] = t
         d["status"] = task[3]
         d["order"] = task[4]
         a.append(d)
