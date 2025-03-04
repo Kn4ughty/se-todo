@@ -2,6 +2,10 @@
 // I thought it would be bad to duplicate data
 
 
+// I hereby apologise for this code.
+// It is very messy, and hard to read and understand.
+
+
 token = localStorage.getItem("token");
 
 confettiEnabled = localStorage.getItem("confetti")
@@ -23,23 +27,14 @@ function process_all_tasks(data, status) {
     sorted = data.sort(function(a, b) {
         var aVal = a["order"],
             bVal = b["order"]
-        return aVal - bVal
+        return bVal - aVal
     })
     console.log(sorted)
     data = sorted
 
 
-    completed = []
     for (i = 0; i < data.length; i++) {
         task = data[i];
-        if (task["status"] == true) {
-            completed.push(task)
-            continue
-        }
-        add_task_to_dom(task["text"], task["uuid"], task["status"], task["order"])
-    }
-    for (i = 0; i < completed.length; i++) {
-        task = completed[i];
         add_task_to_dom(task["text"], task["uuid"], task["status"], task["order"])
     }
 }
@@ -93,7 +88,7 @@ function add_task_to_dom(text, uuid, status, order) {
     let label = "<label for=" + checkbox_id + " " + label_style + "\
     " + "onclick=''>" + text + "</label>"
 
-    $("#todo-list").append("\
+    $("#todo-list").prepend("\
         <div class='task' id = '" + uuid + "' \
         data-order='" + order + "'> \
             <div class='task-left-side'>\
@@ -220,6 +215,7 @@ function update_task_status(uuid, element) {
                     console.log("Appending task")
                     e.appendTo("#todo-list")
                     e.fadeIn()
+                    update_task_order()
                 }))
             }
             else {
@@ -231,6 +227,48 @@ function update_task_status(uuid, element) {
     else {
         $("#" + uuid + " .task-left-side label").css("text-decoration", "none");
     }
+}
+
+function update_task_order(event, ui) {
+
+    let all_tasks = $(".task")
+
+    for (i = 0; i < all_tasks.length; i++) {
+        let task = all_tasks[i]
+        console.log(task)
+
+
+
+        let new_index = Array.prototype.indexOf.call($("#todo-list")[0].children, task)
+        console.log(new_index)
+
+        // Make request to server to update order
+        // POST /taskOrder
+
+
+        // This is horrible for performance, but i dont have time to be better
+
+        // For every task, get its index and update it
+
+        $.ajax({
+            type: "POST",
+            url: "/taskOrder",
+            headers: {
+                Authorization: 'Bearer ' + token
+            },
+            data: {
+                "uuid": task.id,
+                "order": new_index
+            },
+            success: function(response) {
+                console.log("ORDER UPDATED")
+            },
+            error: function(error) {
+                console.error("ERROR UPDATING ORDFER")
+            }
+        })
+    }
+
 }
 
 $('document').ready(function() {
@@ -294,47 +332,7 @@ $('document').ready(function() {
 
     // Make elements sortable
     $("#todo-list").sortable({
-        update: function(event, ui) {
-
-            let all_tasks = $(".task")
-
-            for (i = 0; i < all_tasks.length; i++) {
-                let task = all_tasks[i]
-                console.log(task)
-
-
-
-                let new_index = Array.prototype.indexOf.call($("#todo-list")[0].children, task)
-                console.log(new_index)
-
-                // Make request to server to update order
-                // POST /taskOrder
-
-
-                // This is horrible for performance, but i dont have time to be better
-
-                // For every task, get its index and update it
-
-                $.ajax({
-                    type: "POST",
-                    url: "/taskOrder",
-                    headers: {
-                        Authorization: 'Bearer ' + token
-                    },
-                    data: {
-                        "uuid": task.id,
-                        "order": new_index
-                    },
-                    success: function(response) {
-                        console.log("ORDER UPDATED")
-                    },
-                    error: function(error) {
-                        console.error("ERROR UPDATING ORDFER")
-                    }
-                })
-            }
-
-        }
+        update: update_task_order
     })
 
 });
