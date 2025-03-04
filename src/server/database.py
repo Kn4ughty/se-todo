@@ -10,16 +10,16 @@ from main import app
 
 # This guide is good
 # https://www.geeksforgeeks.org/python-sqlite/
+data_dir_name = "naught"
+app_dir = "todo"
+local_share = Path("~/.local/share/").expanduser()
+self_data_dir = os.path.join(local_share, data_dir_name)
+full_data_dir = os.path.join(self_data_dir, app_dir)
 
 
 def setup_data_directory():
-    data_dir_name = "naught"
-    app_dir = "todo"
-    local_share = Path("~/.local/share/").expanduser()
     log.debug(f"local share dir expanded to {local_share}")
 
-    self_data_dir = os.path.join(local_share, data_dir_name)
-    full_data_dir = os.path.join(self_data_dir, app_dir)
     log.debug(f"Full app data dir = {full_data_dir}")
 
     if os.path.exists(full_data_dir):
@@ -50,8 +50,8 @@ def setup_data_directory():
 
 setup_data_directory()
 
-# this should be based on all the fancy path planning used in the above func
-db_file_location = Path("~/.local/share/naught/todo/db.sqlite3").expanduser()
+db_file_location = Path(full_data_dir + "/db.sqlite3")
+log.info(f"Db location set at {db_file_location}")
 
 
 def get_db() -> sqlite3.Connection:
