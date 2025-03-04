@@ -19,10 +19,11 @@ else {
 
 function process_all_tasks(data, status) {
     // Data is a json array of items
+    console.log(data)
     sorted = data.sort(function(a, b) {
         var aVal = a["order"],
             bVal = b["order"]
-        return bVal - aVal
+        return aVal - bVal
     })
     console.log(sorted)
     data = sorted
@@ -35,11 +36,11 @@ function process_all_tasks(data, status) {
             completed.push(task)
             continue
         }
-        add_task_to_dom(task["text"], task["uuid"], task["status"])
+        add_task_to_dom(task["text"], task["uuid"], task["status"], task["order"])
     }
     for (i = 0; i < completed.length; i++) {
         task = completed[i];
-        add_task_to_dom(task["text"], task["uuid"], task["status"])
+        add_task_to_dom(task["text"], task["uuid"], task["status"], task["order"])
     }
 }
 
@@ -76,7 +77,7 @@ function escapeHTML(str) {
 
 
 
-function add_task_to_dom(text, uuid, status) {
+function add_task_to_dom(text, uuid, status, order) {
     let checked = ""
     let label_style = ""
     if (status == true) {
@@ -93,7 +94,8 @@ function add_task_to_dom(text, uuid, status) {
     " + "onclick=''>" + text + "</label>"
 
     $("#todo-list").append("\
-        <div class='task' id = '" + uuid + "'> \
+        <div class='task' id = '" + uuid + "' \
+        data-order='" + order + "'> \
             <div class='task-left-side'>\
                 " + checkbox + "\
                 " + label + "\
@@ -288,6 +290,52 @@ $('document').ready(function() {
     else {
         $("#confetti-toggler").prepend(confetti_switch + ">")
     }
+
+
+    // Make elements sortable
+    $("#todo-list").sortable({
+        update: function(event, ui) {
+
+            let all_tasks = $(".task")
+
+            for (i = 0; i < all_tasks.length; i++) {
+                let task = all_tasks[i]
+                console.log(task)
+
+
+
+                let new_index = Array.prototype.indexOf.call($("#todo-list")[0].children, task)
+                console.log(new_index)
+
+                // Make request to server to update order
+                // POST /taskOrder
+
+
+                // This is horrible for performance, but i dont have time to be better
+
+                // For every task, get its index and update it
+
+                $.ajax({
+                    type: "POST",
+                    url: "/taskOrder",
+                    headers: {
+                        Authorization: 'Bearer ' + token
+                    },
+                    data: {
+                        "uuid": task.id,
+                        "order": new_index
+                    },
+                    success: function(response) {
+                        console.log("ORDER UPDATED")
+                    },
+                    error: function(error) {
+                        console.error("ERROR UPDATING ORDFER")
+                    }
+                })
+            }
+
+        }
+    })
 
 });
 

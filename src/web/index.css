@@ -13,7 +13,7 @@
 
 * {
     color: inherit;
-    font-family: main, system-ui;
+    /*font-family: main, system-ui;*/
 }
 
 
@@ -21,7 +21,7 @@
 body {
     background: linear-gradient(0deg, var(--bg-dark) 0%, var(--surface) 100%);
     color: var(--text);
-    font-family: main, system-ui;
+    font-family: system-ui;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -78,6 +78,7 @@ sub {
 
 h1 {
     font-size: 2em;
+    font-family: baloo, system-ui;
 }
 
 
