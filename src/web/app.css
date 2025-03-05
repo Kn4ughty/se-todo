@@ -138,6 +138,7 @@ input[type='checkbox'] {
 
 .option {
     padding: 0.2rem;
+    margin: 0.3rem;
     background: var(--surface1);
     border-radius: 0.5rem;
     display: flex;

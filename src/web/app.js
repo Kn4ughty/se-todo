@@ -175,12 +175,11 @@ function update_task_status(uuid, element) {
         $("#" + uuid + " .task-left-side label").css("text-decoration", "line-through");
         if (confettiEnabled) {
             window.confetti({ "origin": { "x": 0.5, "y": 1 } })
-
-            if (soundEnabled) {
-                var audio = new Audio('/assets/tada.mp3');
-                audio.volume = 0.5;
-                audio.play();
-            }
+        }
+        if (soundEnabled) {
+            var audio = new Audio('/assets/tada.mp3');
+            audio.volume = 0.5;
+            audio.play();
         }
         // This delay makes it so that if you accidentally checked the task,
         // you can then undo it by unchecking it in that timeout
