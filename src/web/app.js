@@ -7,30 +7,6 @@
 
 
 token = localStorage.getItem("token");
-
-confettiEnabled = localStorage.getItem("confetti")
-if (confettiEnabled == "true") {
-    confettiEnabled = true
-}
-else if (confettiEnabled == "false") {
-    confettiEnabled = false
-}
-else {
-    // Confetti value is not set
-    const isReduced = window.matchMedia(`(prefers-reduced-motion: reduce)`) === true || window.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true;
-
-    // By default set confetti off if reduced motion is on
-    if (isReduced) {
-        confettiEnabled = false
-        localStorage.setItem('confetti', 'false')
-    }
-    else {
-        confettiEnabled = true
-        localStorage.setItem('confetti', 'true')
-    }
-}
-
-
 function process_all_tasks(data, status) {
     // Data is a json array of items
     console.log(data)
@@ -199,9 +175,12 @@ function update_task_status(uuid, element) {
         $("#" + uuid + " .task-left-side label").css("text-decoration", "line-through");
         if (confettiEnabled) {
             window.confetti({ "origin": { "x": 0.5, "y": 1 } })
-            var audio = new Audio('/assets/tada.mp3');
-            audio.volume = 0.5;
-            audio.play();
+
+            if (soundEnabled) {
+                var audio = new Audio('/assets/tada.mp3');
+                audio.volume = 0.5;
+                audio.play();
+            }
         }
         // This delay makes it so that if you accidentally checked the task,
         // you can then undo it by unchecking it in that timeout
@@ -277,6 +256,74 @@ function update_task_order(event, ui) {
 
 }
 
+function setup_options() {
+
+
+    confettiEnabled = localStorage.getItem("confetti")
+    if (confettiEnabled == "true") {
+        confettiEnabled = true
+    }
+    else if (confettiEnabled == "false") {
+        confettiEnabled = false
+    }
+    else {
+        // Confetti value is not set
+        const isReduced = window.matchMedia(`(prefers-reduced-motion: reduce)`) === true || window.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true;
+
+        // By default set confetti off if reduced motion is on
+        if (isReduced) {
+            confettiEnabled = false
+            localStorage.setItem('confetti', 'false')
+        }
+        else {
+            confettiEnabled = true
+            localStorage.setItem('confetti', 'true')
+        }
+    }
+
+    confetti_switch = "<input type='checkbox' id='confetti-toggle' \
+        aria-label='Confetti Toggle Switch' \
+        onclick='localStorage.setItem(\"confetti\", this.checked); \
+        confettiEnabled = this.checked'"
+
+    if (confettiEnabled) {
+        $("#confetti-toggler").prepend(confetti_switch + "checked>")
+    }
+    else {
+        $("#confetti-toggler").prepend(confetti_switch + ">")
+    }
+
+
+
+
+    soundEnabled = localStorage.getItem("sound")
+    if (soundEnabled == "true") {
+        soundEnabled = true
+    }
+    else if (soundEnabled == "false") {
+        soundEnabled = false
+    }
+    else {
+        soundEnabled = true
+    }
+
+    sound_switch = "<input type='checkbox' id='sound-toggle' \
+        aria-label='Sound Toggle Switch' \
+        onclick='localStorage.setItem(\"sound\", this.checked); \
+        soundEnabled = this.checked'"
+
+
+    if (soundEnabled) {
+        $("#sound-toggler").prepend(sound_switch + "checked>")
+    }
+    else {
+        $("#sound-toggler").prepend(sound_switch + ">")
+    }
+
+
+
+}
+
 $('document').ready(function() {
 
     // Load existing tasks from server
@@ -323,18 +370,7 @@ $('document').ready(function() {
         return false;
     });
 
-    confetti_switch = "<input type='checkbox' id='confetti-toggle' \
-        aria-label='Confetti Toggle Switch' \
-        onclick='localStorage.setItem(\"confetti\", this.checked); \
-        confettiEnabled = this.checked'"
-
-    if (confettiEnabled) {
-        $("#confetti-toggler").prepend(confetti_switch + "checked>")
-    }
-    else {
-        $("#confetti-toggler").prepend(confetti_switch + ">")
-    }
-
+    setup_options();
 
     // Make elements sortable
     $("#todo-list").sortable({
