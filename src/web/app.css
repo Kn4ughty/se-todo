@@ -80,7 +80,6 @@ input[type='checkbox'] {
     cursor: pointer;
 }
 
-
 .task-edit {
     width: 100% !important;
     background: none !important;
@@ -144,4 +143,10 @@ input[type='checkbox'] {
     display: flex;
     flex-direction: column;
     box-shadow: var(--drop-shadow);
+}
+
+
+.switch input[type='checkbox'] {
+    position: relative;
+    top: -2rem;
 }
