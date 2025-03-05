@@ -16,8 +16,18 @@ else if (confettiEnabled == "false") {
     confettiEnabled = false
 }
 else {
-    confettiEnabled = true
-    localStorage.setItem('confetti', 'true')
+    // Confetti value is not set
+    const isReduced = window.matchMedia(`(prefers-reduced-motion: reduce)`) === true || window.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true;
+
+    // By default set confetti off if reduced motion is on
+    if (isReduced) {
+        confettiEnabled = false
+        localStorage.setItem('confetti', 'false')
+    }
+    else {
+        confettiEnabled = true
+        localStorage.setItem('confetti', 'true')
+    }
 }
 
 
@@ -39,14 +49,7 @@ function process_all_tasks(data, status) {
     }
 }
 
-// This awesome function is from https://stackoverflow.com/questions/8433691/sorting-list-of-elements-in-jquery
-function getSorted(selector, attrName) {
-    return $($(selector).toArray().sort(function(a, b) {
-        var aVal = parseInt(a.getAttribute(attrName)),
-            bVal = parseInt(b.getAttribute(attrName));
-        return aVal - bVal;
-    }));
-}
+
 
 // This function from
 function escapeHTML(str) {

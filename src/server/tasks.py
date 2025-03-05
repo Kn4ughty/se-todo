@@ -168,8 +168,11 @@ def delete_task():
         raise Exception
 
     id = request.form["uuid"]
-    if get_username_from_uuid(id) != u.username:
-        return jsonify("we think u stole this task uuid"), 401
+    try:
+        if get_username_from_uuid(id) != u.username:
+            return jsonify("we think u stole this task uuid"), 401
+    except TypeError:
+        return jsonify("Invalid task UUID. Try refreshing the page?"), 400
 
     log.info(f"Deleting task with id {id}")
     con = db.get_db()
