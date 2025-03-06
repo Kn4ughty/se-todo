@@ -15,6 +15,10 @@ from server.types import User, Token
 # flask http thing
 # https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xxiii-application-programming-interfaces-apis
 
+# I would have used cookies for authencation and rolled it myself, if i knew
+# how cookies worked. However I didn't,
+# and now its more complicated than it needs to be.
+
 unauthorized_error_msg = (
     (
         jsonify(

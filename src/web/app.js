@@ -5,6 +5,13 @@
 // I hereby apologise for this code.
 // It is very messy, and hard to read and understand.
 
+// As mentioned in auth.py, i wish i had known about how cookies work earlier.
+// It would make all the ajax requests so much smaller.
+
+// I would have also liked to use HTMX. But i learned alot by using Jquery.
+// For my next project im definetly going to use it.
+// It will move more code to server side, and prevent abominations like then
+// add_task_to_dom function. 
 
 token = localStorage.getItem("token");
 function process_all_tasks(data, status) {
