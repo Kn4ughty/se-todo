@@ -19,17 +19,19 @@ from server.types import User, Token
 # how cookies worked. However I didn't,
 # and now its more complicated than it needs to be.
 
-unauthorized_error_msg = (
-    (
-        jsonify(
-            {
-                "error": "Unauthorized",
-                "message": "Invalid credentials",
-            }
+global unauthorized_error_msg
+with app.app_context():
+    unauthorized_error_msg = (
+        (
+            jsonify(
+                {
+                    "error": "Unauthorized",
+                    "message": "Invalid credentials",
+                }
+            ),
         ),
-    ),
-    401,
-)
+        401,
+    )
 
 
 basic_auth = HTTPBasicAuth()
