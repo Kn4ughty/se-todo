@@ -1,4 +1,4 @@
-from loguru import logger
+from loguru import logger as log
 import flask
 from flask import Flask
 import os
@@ -12,23 +12,27 @@ app = Flask(
 )
 
 # This import is below app = Flask so that modules can access the app var
-# The noqa: tells my lsp to ignore imports being below code
-from server import auth, database, tasks  # noqa: E402
+# Circular import moment :P
+# https://flask.palletsprojects.com/en/stable/patterns/packages/
+from server import auth, database, tasks  # noqa
 
 
 # When requesting something from /, go to the static dir and serve that
 @app.route("/<path:filename>")
 def serve_all_static_files(filename):
+    log.info(f"getting static file: {filename}")
     return flask.send_from_directory(STATIC_DIR, filename)
 
 
 @app.route("/")
 def serve_index():
+    log.info("Getting index.html from /")
     return flask.send_from_directory(STATIC_DIR, "index.html")
 
 
 @app.route("/serviceWorker.js")
 def serve_serviceWorker():
+    log.info("Getting service worker.")
     return flask.send_from_directory(
         STATIC_DIR, "serviceWorker.js", mimetype="application/javascript"
     )

@@ -42,7 +42,7 @@ def add_task():
     try:
         status = bool(request.form["status"])
     except BadRequestKeyError:
-        status = None
+        status = 0
 
     u = uuid.uuid4().hex
     log.info(

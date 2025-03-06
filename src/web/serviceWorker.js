@@ -15,10 +15,6 @@ const putInCache = async (request, response) => {
 
 
 
-
-
-// AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-
 //
 //const cacheFirst = async ({ request, fallbackUrl }) => {
 //    // First try to get the resource from the cache.
@@ -55,7 +51,6 @@ const putInCache = async (request, response) => {
 //};
 //
 
-// AAAAAAAAAAAAAA
 
 
 self.addEventListener('install', function(event) {

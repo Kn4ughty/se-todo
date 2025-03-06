@@ -3,8 +3,6 @@ from flask import request, Response, jsonify
 from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
 from loguru import logger as log
 
-# This is a circular import. However, flask offically reccomends it
-# https://flask.palletsprojects.com/en/stable/patterns/packages/
 from main import app
 import server.database as db
 from server.types import User, Token
@@ -77,8 +75,10 @@ def verify_token(token: str):
 def get_token():
     u = token_auth.current_user()
     log.debug(f"Getting token for user: {u}")
+
     if type(u) is not User:
         return "ERROR", 400
+
     t = u.get_token()
     return jsonify({"token": t.token, "expires": t.token_expiry_time}), 200
 
@@ -103,12 +103,6 @@ def is_token_valid():
     b = Token.is_token_valid(user.token.token_expiry_time)
 
     return jsonify(1 * b), 200
-
-
-@app.post("/refreshToken")
-@token_auth.login_required
-def refresh_token():
-    raise NotImplementedError
 
 
 @app.post("/signup")

@@ -3,8 +3,7 @@
  "short_name": "Todo",
  "start_url": "/",
  "scope": "/",
- "display": "fullscreen",
- /* #313244*/
+ "display": "standalone",
  "theme_color": "#313244",
  "background_color": "#1e1e2e",
  "icons": [
