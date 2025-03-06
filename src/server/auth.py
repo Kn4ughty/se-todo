@@ -2,7 +2,6 @@ import bcrypt
 from flask import request, Response, jsonify
 from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
 from loguru import logger as log
-import json
 
 # This is a circular import. However, flask offically reccomends it
 # https://flask.palletsprojects.com/en/stable/patterns/packages/
@@ -16,6 +15,19 @@ from server.types import User, Token
 # flask http thing
 # https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xxiii-application-programming-interfaces-apis
 
+unauthorized_error_msg = (
+    (
+        jsonify(
+            {
+                "error": "Unauthorized",
+                "message": "Invalid credentials",
+            }
+        ),
+    ),
+    401,
+)
+
+
 basic_auth = HTTPBasicAuth()
 token_auth = HTTPTokenAuth()
 
@@ -23,7 +35,7 @@ token_auth = HTTPTokenAuth()
 @basic_auth.error_handler
 def basic_auth_error(status):
     log.error(f"BASIC AUTH ERROR: {status}")
-    return jsonify({"error": "Unauthorized", "message": "Invalid credentials"}), 401
+    return unauthorized_error_msg
 
 
 @basic_auth.verify_password
@@ -45,7 +57,7 @@ def verify_password(username, password) -> User | None:
 @token_auth.error_handler
 def token_auth_error(status):
     log.error(f"TOKEN AUTH ERROR: {status}")
-    return jsonify({"error": "Unauthorized", "message": "Invalid credentials"}), 401
+    return unauthorized_error_msg
 
 
 @token_auth.verify_token
@@ -61,8 +73,8 @@ def get_token():
     log.debug(f"Getting token for user: {u}")
     if type(u) is not User:
         return "ERROR", 400
-    token = u.get_token()
-    return jsonify({"token": token.token, "expires": token.token_expiry_time}), 200
+    t = u.get_token()
+    return jsonify({"token": t.token, "expires": t.token_expiry_time}), 200
 
 
 @app.post("/tokenValid")
@@ -91,14 +103,6 @@ def is_token_valid():
 @token_auth.login_required
 def refresh_token():
     raise NotImplementedError
-
-    u = token_auth.current_user()
-    if type(u) is not User:
-        raise Exception
-
-    t = u.get_token()
-
-    return jsonify(t)
 
 
 @app.post("/signup")

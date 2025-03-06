@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 import bcrypt
 import secrets
 import time
@@ -14,6 +14,10 @@ class Token:
 
     @staticmethod
     def is_token_valid(token_expiry_time: float) -> bool:
+        log.info(
+            f"Token validation is being checked. \
+            expire_time: {token_expiry_time}"
+        )
         now = time.time()
         return True if (token_expiry_time >= now) else False
 
@@ -36,7 +40,6 @@ class User:
 
     def get_token(self) -> Token:
         log.debug(f"Token being gotten for user: {self}")
-        # Check if token exists for username in db.
         db_token = db.get_token_from_user(self)
 
         if db_token is not None:
@@ -47,5 +50,3 @@ class User:
                 db.revoke_token(db_token)
 
         return self.create_token()
-
-        # If not then create one and add to db and return

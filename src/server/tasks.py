@@ -1,6 +1,6 @@
 from loguru import logger as log
 import flask
-from flask import Flask, jsonify, request, Response
+from flask import jsonify, request
 import uuid
 from werkzeug.exceptions import BadRequestKeyError
 
@@ -8,27 +8,7 @@ from main import app
 
 import server.database as db
 from server.auth import token_auth
-from server.types import User, Token
-
-
-# TODO. Perhapse inline this into add_task()
-def add_task_to_db(username: str, text: str, status: bool = False) -> str:
-    with app.app_context():
-        con = db.get_db()
-        cur = con.cursor()
-
-        u = uuid.uuid4().hex
-        log.info(f"Task being added to db. username: {username}. uuid: {u}")
-
-        cur.execute(
-            """
-            INSERT INTO TASKS VALUES (?, ?, ?, ?, ?)
-        """,
-            [u, username, text, status, None],
-        )
-        con.commit()
-
-        return u
+from server.types import User
 
 
 def get_username_from_uuid(uuid: str) -> str:
@@ -53,15 +33,34 @@ def add_task():
     if type(u) is not User:
         raise Exception
     username = u.username
-    log.info(f"Recived data from /tasks POST: {request.form}")
+
     text = request.form["text"]
+
+    # this is done this way so that status can be pre-set
+    # However i dont really see a use case for it
+    # But it is here just in case
     try:
         status = bool(request.form["status"])
-        uid = add_task_to_db(username, text, status)
     except BadRequestKeyError:
-        uid = add_task_to_db(username, text)
+        status = None
 
-    return jsonify(uid), 200
+    u = uuid.uuid4().hex
+    log.info(
+        f"Task being added to db. \
+    username: {username}. uuid: {u}. text: {text}"
+    )
+
+    con = db.get_db()
+    cur = con.cursor()
+    cur.execute(
+        """
+        INSERT INTO TASKS VALUES (?, ?, ?, ?, ?)
+    """,
+        [u, username, text, status, None],
+    )
+    con.commit()
+
+    return jsonify(u), 200
 
 
 @app.get("/tasks")
@@ -73,6 +72,8 @@ def get_all_tasks():
     u = token_auth.current_user()
     if type(u) is not User:
         raise Exception
+
+    log.info(f"User {u} is getting their tasks.")
 
     cur.execute(
         """
@@ -107,6 +108,8 @@ def update_task_text():
     new_text = request.form["text"]
     id = request.form["uuid"]
 
+    log.info(f"User: {u} is updating task text for id: {id}")
+
     if get_username_from_uuid(id) != u.username:
         return jsonify("we think u stole this task uuid"), 401
 
@@ -122,7 +125,7 @@ def update_task_text():
     )
     con.commit()
 
-    return jsonify("woah"), 200
+    return jsonify(), 200
 
 
 @app.post("/updateTaskStatus")
@@ -134,6 +137,11 @@ def update_task_status():
 
     raw_stat = request.form["status"]
     id = request.form["uuid"]
+
+    log.info(
+        f"user: {u} is updating task status. \
+    id: {id}. status: {raw_stat}"
+    )
 
     if raw_stat == 0 or raw_stat.lower() == "false":
         new_status = 0
@@ -168,6 +176,9 @@ def delete_task():
         raise Exception
 
     id = request.form["uuid"]
+
+    log.info(f"user: {u} is deleting task with id {id}")
+
     try:
         if get_username_from_uuid(id) != u.username:
             return jsonify("we think u stole this task uuid"), 401
@@ -198,6 +209,8 @@ def change_task_order():
 
     new_order = int(request.form["order"])
     uuid = request.form["uuid"]
+
+    log.debug(f"User: {u} taskOrder. id: {uuid}. Order {new_order}")
 
     if get_username_from_uuid(uuid) != u.username:
         return jsonify("we think u stole this task uuid"), 401

@@ -1,6 +1,5 @@
 import sqlite3
 from loguru import logger as log
-from typing import List
 from pathlib import Path
 import os
 from flask import g, jsonify
@@ -55,7 +54,7 @@ log.info(f"Db location set at {db_file_location}")
 
 
 def get_db() -> sqlite3.Connection:
-    log.debug("Database is being gotten")
+    log.debug("get_db")
     db = getattr(g, "_database", None)
     if db is None:
         db = g._database = sqlite3.connect(db_file_location)
@@ -66,7 +65,7 @@ def get_db() -> sqlite3.Connection:
 # Its kinda weird https://flask.palletsprojects.com/en/stable/patterns/sqlite3/
 @app.teardown_appcontext
 def teardown_db(exception):
-    log.debug("Automatically closing/teardown the db")
+    log.debug("db closing")
     if exception is not None:
         log.debug(f"Teardown_appcontext exception: {exception}")
 
@@ -124,25 +123,6 @@ def init_database():
 init_database()
 
 
-def get_all_users() -> List[User]:
-    log.debug("Get_all_users function being run")
-    cur = get_db().cursor()
-    cur.execute("""
-    SELECT * FROM USERS
-    """)
-    raw_list = cur.fetchall()
-    log.info(f"data recived from db for user list, {raw_list}")
-    # Recieves an List of tupels.
-
-    user_list = []
-    for user in raw_list:
-        user_list.append(User(user[0], bytes(user[1])))
-
-    log.debug(f"Processed list of all users found in DB: {user_list}")
-
-    return user_list
-
-
 def get_user(username: str) -> User | None:
     cur = get_db().cursor()
     cur.execute(
@@ -165,7 +145,7 @@ def get_user(username: str) -> User | None:
 
     u = data[0]
 
-    log.info(f"GET USER {username} RETURNED {data}")
+    log.info(f"Get user {username} returned {data}")
     return User(u[0], bytes(u[1]))
 
 
