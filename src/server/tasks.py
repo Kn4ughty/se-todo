@@ -89,7 +89,7 @@ def get_all_tasks():
         d["uuid"] = task[0]
         # Skip username as its not required
         t = flask.render_template_string("{{t}}", t=task[2])
-        log.error(f"Sanitised text, {t}")
+        log.info(f"Sanitised text, {t}")
         d["text"] = t
         d["status"] = task[3]
         d["order"] = task[4]
