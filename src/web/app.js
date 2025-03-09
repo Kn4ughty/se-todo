@@ -342,6 +342,9 @@ $('document').ready(function() {
         success: process_all_tasks,
         error: function(error) {
             console.log("Invalid token?", error);
+            alert("Potential invalid token")
+            window.location.href = "/login.html";
+
             if (error.status == 401) {
                 alert("Invalid token. Please login again");
                 window.location.href = "/login.html";
@@ -370,6 +373,7 @@ $('document').ready(function() {
             },
             error: function(error) {
                 console.error("Error adding task. Error: ", error)
+                alert("Error adding task: ", error)
             }
         },
         )
